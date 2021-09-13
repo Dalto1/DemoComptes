@@ -68,23 +68,5 @@ namespace ProjetC.Controllers
 
             return "Le transfert du compte #" + accountOriginal.AccountNumber + " au compte #" + accountDestination.AccountNumber + " d'un montant de " + amount + "$ est completé";
         }
-        /*[HttpGet("api/comptes/transfertv2/{num1}/{num2}/{montant}")]
-        public async ValueTask<string> Transfer2(int fromAccount, int toAccount, int amount)
-        {
-            var originalAccount = await _context.Comptes.FindAsync(fromAccount);
-            var destinationAccount = await _context.Comptes.FindAsync(toAccount);
-
-            string result;
-            if (originalAccount == null || destinationAccount == null) result = "Un ou plusieurs compte(s) est(sont) introuvable(s).";
-            if (!originalAccount.isActive || !destinationAccount.isActive) result = "Un ou plusieurs compte(s) est(sont) désactivé(s).";
-            if (originalAccount.AccountBalance < amount) result = "Solde insufisant";
-
-            destinationAccount.AccountBalance += amount;
-            originalAccount.AccountBalance -= amount;
-
-            _context.SaveChanges();
-
-            return null;
-        }*/
     }
 }
