@@ -2,12 +2,9 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/Dalto1/ProjetC)
 ![Lines of code](https://img.shields.io/tokei/lines/github/Dalto1/ProjetC)
 
-Projet personnel simulant des comptes et des opérations en RESTapi
-
-# Fonctionnalités majeures
+Projet personnel simulant des comptes et des opérations diverses.
 
 ## RESTful API
-Fonctionalités principales
 |                 	| POST                    	| GET                                  	| PUT                        	| DELETE                      	|
 |-----------------	|-------------------------	|--------------------------------------	|----------------------------	|-----------------------------	|
 | api/comptes     	| Création compte         	| Informations sur tous les comptes    	|                            	| Effacer tous les comptes    	|
@@ -15,7 +12,7 @@ Fonctionalités principales
 | api/transfert   	| Création d'un transfert 	| Informations sur tous les transferts 	|                            	| Effacer tous les transferts 	|
 | api/transfert/1 	| Erreur                  	| Information sur un transfert         	| Mise à jour d'un transfert 	| Effacer un transfert        	|
 
-Fonctionalités partielles et futures
+## Fonctionalités partielles et futures
 * Transfert effectif dans les comptes
 * Associer les transactions dans les comptes
 * Tests unitaires
