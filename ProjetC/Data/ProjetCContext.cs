@@ -13,6 +13,6 @@ namespace ProjetC.Data
         {
         }
 
-        public DbSet<Account> Comptes { get; set; }
+        public DbSet<Account> Account { get; set; }
     }
 }
