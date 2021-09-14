@@ -8,14 +8,13 @@ Projet personnel simulant des comptes et des opérations en RESTapi
 
 ## RESTful API
 Fonctionalités principales
-* Création de compte
-* Liste des compte
-* Information sur un compte
-* Suppression d'un compte
-* Effacer tous les comptes
+|                 	| POST                    	| GET                                  	| PUT                        	| DELETE                      	|
+|-----------------	|-------------------------	|--------------------------------------	|----------------------------	|-----------------------------	|
+| api/comptes     	| Création compte         	| Informations sur tous les comptes    	|                            	| Effacer tous les comptes    	|
+| api/comptes/1   	| Erreur                  	| Information sur un compte            	| Mise à jour du compte      	| Effacer le compte           	|
+| api/transfert   	| Création d'un transfert 	| Informations sur tous les transferts 	|                            	| Effacer tous les transferts 	|
+| api/transfert/1 	| Erreur                  	| Information sur un transfert         	| Mise à jour d'un transfert 	| Effacer un transfert        	|
 
-Fonctionalités partielles
+Fonctionalités partielles et futures
 * Transactions entre des comptes
-
-Fonctionalités à venir
 * Transactions sous forme de modèles
