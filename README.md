@@ -17,3 +17,8 @@ Fonctionalités principales
 
 Fonctionalités partielles et futures
 * Transfert effectif dans les comptes
+* Associer les transactions dans les comptes
+* Tests unitaires
+* Tests Podman
+* GRPC
+* Isolation dans un domaine
