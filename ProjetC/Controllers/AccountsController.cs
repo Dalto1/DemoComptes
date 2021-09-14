@@ -10,10 +10,10 @@ namespace ProjetC.Controllers
 {
     [Route("api/comptes")]
     [ApiController]
-    public class AccountController : ControllerBase
+    public class AccountsController : ControllerBase
     {
-        private readonly ProjetCContext _context;
-        public AccountController(ProjetCContext context)
+        private readonly AccountsContext _context;
+        public AccountsController(AccountsContext context)
         {
             _context = context;
         }
@@ -98,25 +98,6 @@ namespace ProjetC.Controllers
 
             return NoContent();
         }
-
-        [HttpGet("{account1}/transfert/{account2}/{amount}")]
-        public async Task<string> Transfer(int account1, int account2, int amount)
-        {
-            var accountOriginal = await _context.Account.FindAsync(account1);
-            var accountDestination = await _context.Account.FindAsync(account2);
-
-            if (accountOriginal == null || accountDestination == null) return "Un ou plusieurs compte(s) est(sont) introuvable(s).";
-            if (!accountOriginal.isActive || !accountDestination.isActive) return "Un ou plusieurs compte(s) est(sont) désactivé(s).";
-            if (accountOriginal.AccountBalance < amount) return "Solde insufisant";
-            if (amount < 0) return "Le solde du transfert doit être positif";
-
-            accountDestination.AccountBalance += amount;
-            accountOriginal.AccountBalance -= amount;
-
-            await _context.SaveChangesAsync();
-
-            return "Le transfert du compte #" + accountOriginal.AccountNumber + " au compte #" + accountDestination.AccountNumber + " d'un montant de " + amount + "$ est completé";
-        } // TODO Utiliser un HTTPPost pour fabriquer une transaction
 
         private bool AccountExists(int id)
         {

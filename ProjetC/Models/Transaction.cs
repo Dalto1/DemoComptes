@@ -10,8 +10,12 @@ namespace ProjetC.Models
         [Required]
         public int TransactionAmount { get; set; }
         [Required]
-        public int TransactionSource { get; set; }
+        public DateTime TransactionDate { get; set; }
+        [Required]
+        public int TransactionOrigin { get; set; }
         [Required]
         public int TransactionDestination { get; set; }
+        [Required]
+        public bool isValid { get; set; }
     }
 }

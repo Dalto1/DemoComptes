@@ -27,12 +27,20 @@ namespace ProjetC
                     options.JsonSerializerOptions.IgnoreNullValues = true;
                     options.JsonSerializerOptions.WriteIndented = true;
                 });
-
-            /*services.AddDbContext<ProjetCContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("ProjetCContext")));*/
-            services.AddDbContext<ProjetCContext>(context =>
+            /*
+            services.AddDbContext<AccountsContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("AccountsContext")));
+            
+            services.AddDbContext<TransactionsContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("TransactionsContext")));
+            */
+            services.AddDbContext<AccountsContext>(context =>
             {
-                context.UseInMemoryDatabase("Comptes");
+                context.UseInMemoryDatabase("Account");
+            });
+            services.AddDbContext<TransactionsContext>(context =>
+            {
+                context.UseInMemoryDatabase("Transaction");
             });
         }
 

@@ -16,5 +16,4 @@ Fonctionalités principales
 | api/transfert/1 	| Erreur                  	| Information sur un transfert         	| Mise à jour d'un transfert 	| Effacer un transfert        	|
 
 Fonctionalités partielles et futures
-* Transactions entre des comptes
-* Transactions sous forme de modèles
+* Transfert effectif dans les comptes
