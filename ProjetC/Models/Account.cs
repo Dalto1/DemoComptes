@@ -11,13 +11,11 @@ namespace ProjetC.Models
         public int AccountBalance { get; set; }
         [Required]
         public DateTime AccountCreationDate { get; set; }
+        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Utilisez seulement des lettres")]
+        public string AccountHolderFirstName { get; set; }
+        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Utilisez seulement des lettres")]
+        public string AccountHolderLastName { get; set; }
         [Required]
         public bool isActive { get; set; }
-        public Account()
-        {
-            this.AccountBalance = 0;
-            this.isActive = true;
-            this.AccountCreationDate = DateTime.Now;
-        }
     }
 }
