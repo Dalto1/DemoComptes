@@ -12,10 +12,10 @@ Fonctionalités principales
 * Liste des compte
 * Information sur un compte
 * Suppression d'un compte
+* Effacer tous les comptes
 
 Fonctionalités partielles
-* Transaction entre des comptes
+* Transactions entre des comptes
 
 Fonctionalités à venir
-* Updater les informations d'un compte
-* Effacer tous les comptes
+* Transactions sous forme de modèles

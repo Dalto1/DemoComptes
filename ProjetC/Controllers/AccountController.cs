@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using ProjetC.Data;
 using ProjetC.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,24 +24,20 @@ namespace ProjetC.Controllers
             _context.Account.Add(account);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetAccount", new { id = account.AccountNumber }, account);
-        } //TODO Erreur dans la création à trouver
+            return CreatedAtAction("AccountFind", new { id = account.AccountNumber }, account);
+        }
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Account>>> AccountList()
         {
             return await _context.Account.ToListAsync();
         }
-        [HttpPut]
-        public string AccountMultiUpdate()
-        {
-            return "Update Multiple Accounts";
-        } //TODO Méthode pour updater plusieurs accounts
         [HttpDelete]
-        public string AccountDeleteAll()
+        public async Task<IActionResult> AccountDeleteAll()
         {
-            //StatusCode(HttpStatusCode.NoContent);
-            return "Update Multiple Accounts";
-        } //TODO Méthode pour effacer tout les comptes
+            _context.Account.RemoveRange(_context.Account);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
 
         [HttpPost("{id}")]
         public BadRequestResult Error()
