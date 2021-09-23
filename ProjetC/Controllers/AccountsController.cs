@@ -12,8 +12,8 @@ namespace ProjetC.Controllers
     [ApiController]
     public class AccountsController : ControllerBase
     {
-        private readonly AccountsContext _context;
-        public AccountsController(AccountsContext context)
+        private readonly ProjetCContext _context;
+        public AccountsController(ProjetCContext context)
         {
             _context = context;
         }
@@ -39,11 +39,6 @@ namespace ProjetC.Controllers
             return NoContent();
         }
 
-        [HttpPost("{id}")]
-        public BadRequestResult Error()
-        {
-            return BadRequest();
-        }
         [HttpGet("{id}")]
         public async Task<ActionResult<Account>> AccountFind(int id)
         {
@@ -99,6 +94,29 @@ namespace ProjetC.Controllers
             return NoContent();
         }
 
+        [HttpGet("{id}/transactions")]
+        public async Task<ActionResult<IEnumerable<Transaction>>> GetTransactionsByAccount(int id)
+        {
+            return await _context.Transaction.Where(s => (s.TransactionOrigin.Equals(id) || s.TransactionDestination.Equals(id))).ToListAsync();
+        }
+        [HttpDelete("{id}/transactions")]
+        public async Task<IActionResult> DeleteTransactionsByAccount(int id)
+        {
+            _context.Transaction.RemoveRange(_context.Transaction.Where(s => (s.TransactionOrigin.Equals(id) || s.TransactionDestination.Equals(id))));
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        [HttpPost("{id}")]
+        [HttpPost("{id}/transactions")]
+        [HttpPost("transactions/{id}")]
+        [HttpPut]
+        [HttpPut("{id}/transactions")]
+        [HttpPut("transactions")]
+        public BadRequestResult Error()
+        {
+            return BadRequest();
+        }
         private bool AccountExists(int id)
         {
             return _context.Account.Any(e => e.AccountNumber == id);

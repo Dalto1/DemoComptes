@@ -12,8 +12,8 @@ namespace ProjetC.Controllers
     [ApiController]
     public class TransactionsController : ControllerBase
     {
-        private readonly TransactionsContext _context;
-        public TransactionsController(TransactionsContext context)
+        private readonly ProjetCContext _context;
+        public TransactionsController(ProjetCContext context)
         {
             _context = context;
         }
@@ -26,6 +26,37 @@ namespace ProjetC.Controllers
 
             return CreatedAtAction("TransactionFind", new { id = transaction.TransactionNumber }, transaction);
         }
+         /*
+            //_context.Transaction.Add(transaction);
+            //await _context.SaveChangesAsync();
+
+
+            //NEW PART
+
+            Transaction transaction1 = new Transaction
+            {
+                TransactionNumber = transaction.TransactionNumber,
+                TransactionOrigin = transaction.TransactionOrigin,
+                TransactionDestination = transaction.TransactionDestination,
+                TransactionAmount = transaction.,
+                TransactionDate = System.DateTime.Now
+            };
+
+            //Account account1 = _context.Account.Find(transaction.TransactionOrigin);
+            //account1.Transactions = new List<Transaction> { transaction };
+            //_context.Add(account1);
+            //_context.Update(account1);
+            //_context.Entry(account1).State = EntityState.Modified;
+            //_context.SaveChanges();
+
+            //if (account1 == null)
+            //{
+            //    return "aucun compte";
+            //}
+            //else return "done";
+            //END NEW PART
+            //return CreatedAtAction("TransactionFind", new { id = transaction.TransactionNumber }, transaction);
+        */
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Transaction>>> TransactionList()
         {
@@ -39,11 +70,6 @@ namespace ProjetC.Controllers
             return NoContent();
         }
 
-        [HttpPost("{id}")]
-        public BadRequestResult Error()
-        {
-            return BadRequest();
-        }
         [HttpGet("{id}")]
         public async Task<ActionResult<Transaction>> TransactionFind(int id)
         {
@@ -119,6 +145,12 @@ namespace ProjetC.Controllers
         } // TODO Utiliser un HTTPPost pour fabriquer une transaction
         */
 
+        [HttpPut]
+        [HttpPost("{id}")]
+        public BadRequestResult Error()
+        {
+            return BadRequest();
+        }
         private bool TransactionExists(int id)
         {
             return _context.Transaction.Any(e => e.TransactionNumber == id);

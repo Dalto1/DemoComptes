@@ -6,16 +6,16 @@
 Projet personnel simulant des comptes et des opérations diverses.
 
 ## RESTful API
-|                 	| POST                    	| GET                                  	| PUT                        	| DELETE                      	|
-|-----------------	|-------------------------	|--------------------------------------	|----------------------------	|-----------------------------	|
-| api/comptes     	| Création compte         	| Informations sur tous les comptes    	|                            	| Effacer tous les comptes    	|
-| api/comptes/1   	| Erreur                  	| Information sur un compte            	| Mise à jour du compte      	| Effacer le compte           	|
-| api/transfert   	| Création d'un transfert 	| Informations sur tous les transferts 	|                            	| Effacer tous les transferts 	|
-| api/transfert/1 	| Erreur                  	| Information sur un transfert         	| Mise à jour d'un transfert 	| Effacer un transfert        	|
+|                           	| POST                       	| GET                                                 	| PUT                           	| DELETE                                      	|
+|---------------------------	|----------------------------	|-----------------------------------------------------	|-------------------------------	|---------------------------------------------	|
+| api/comptes               	| Création compte            	| Informations sur tous les comptes                   	| Erreur                        	| Effacer tous les comptes                    	|
+| api/comptes/1             	| Erreur                     	| Information sur un compte                           	| Mise à jour du compte         	| Effacer le compte                           	|
+| api/comptes/1/transaction 	| Erreur                     	| Information sur toutes les transactions d'un compte 	| Erreur                        	| Effacer toutes les transactions d'un compte 	|
+| api/transaction           	| Création d'une transaction 	| Informations sur toutes les transactions            	| Erreur                        	| Effacer toutes les transactions             	|
+| api/transaction/1         	| Erreur                     	| Information sur une transaction                     	| Mise à jour d'une transaction 	| Effacer une transaction                     	|
 
 ## Fonctionalités partielles et futures
 * Transfert effectif dans les comptes
-* Associer les transactions dans les comptes
 * Tests unitaires
 * Tests Podman
 * GRPC
