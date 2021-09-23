@@ -15,7 +15,6 @@ Projet personnel simulant des comptes et des opérations diverses.
 | api/transaction/1         	| Erreur                     	| Information sur une transaction                     	| Mise à jour d'une transaction 	| Effacer une transaction                     	|
 
 ## Fonctionalités partielles et futures
-* Bug dans la mise à jour des soldes (transactions appliquées en double)
 * Tests unitaires
 * Tests Podman
 * GRPC
