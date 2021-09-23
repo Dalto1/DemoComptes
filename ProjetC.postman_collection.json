@@ -1,0 +1,499 @@
+{
+	"info": {
+		"_postman_id": "5086a2cb-f86d-4146-ae6e-47a8c11ea3e8",
+		"name": "ProjetC",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Infos",
+			"item": [
+				{
+					"name": "Compte 1",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:44307/api/comptes/1",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44307",
+							"path": [
+								"api",
+								"comptes",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Compte 2",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:44307/api/comptes/2",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44307",
+							"path": [
+								"api",
+								"comptes",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Compte 3",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:44307/api/comptes/3",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44307",
+							"path": [
+								"api",
+								"comptes",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Compte 1 - Transactions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:44307/api/comptes/1/transactions",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44307",
+							"path": [
+								"api",
+								"comptes",
+								"1",
+								"transactions"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Création",
+			"item": [
+				{
+					"name": "Compte 1",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"accountBalance\": 99,\r\n    \"accountCreationDate\": \"1999-10-01\",\r\n    \"isActive\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:44307/api/comptes",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44307",
+							"path": [
+								"api",
+								"comptes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Transaction #1 - Compte 1",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"transactionAmount\": 66,\r\n    \"transactionDate\": \"2020-11-01\",\r\n    \"transactionOrigin\": 1,\r\n    \"transactionDestination\": 2,\r\n    \"isValid\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:44307/api/transactions",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44307",
+							"path": [
+								"api",
+								"transactions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Transaction #2 - Compte 1",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"transactionAmount\": 22,\r\n    \"transactionDate\": \"2020-11-01\",\r\n    \"transactionOrigin\": 1,\r\n    \"transactionDestination\": 2,\r\n    \"isValid\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:44307/api/transactions",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44307",
+							"path": [
+								"api",
+								"transactions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Transaction #3 - Compte 2",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"transactionAmount\": 11,\r\n    \"transactionDate\": \"2020-11-01\",\r\n    \"transactionOrigin\": 2,\r\n    \"transactionDestination\": 1,\r\n    \"isValid\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:44307/api/transactions",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44307",
+							"path": [
+								"api",
+								"transactions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Transaction #4 - Compte 2",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"transactionAmount\": 33,\r\n    \"transactionDate\": \"2020-11-01\",\r\n    \"transactionOrigin\": 2,\r\n    \"transactionDestination\": 3,\r\n    \"isValid\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:44307/api/transactions",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44307",
+							"path": [
+								"api",
+								"transactions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Transaction #5 - Compte 2",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"transactionAmount\": 1,\r\n    \"transactionOrigin\": 2,\r\n    \"transactionDestination\": 4,\r\n    \"isValid\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:44307/api/transactions",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44307",
+							"path": [
+								"api",
+								"transactions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Compte 2",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"accountBalance\": 27,\r\n    \"accountCreationDate\": \"2016-01-11\",\r\n    \"accountHolderFirstName\" : \"Bob\",\r\n    \"accountHolderLastName\" : \"Gratton\",\r\n    \"isActive\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:44307/api/comptes",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44307",
+							"path": [
+								"api",
+								"comptes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Compte 3",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"isActive\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:44307/api/comptes",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44307",
+							"path": [
+								"api",
+								"comptes"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Delete",
+			"item": [
+				{
+					"name": "Compte 3",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:44307/api/comptes/3",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44307",
+							"path": [
+								"api",
+								"comptes",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Compte 1 - Transactions",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:44307/api/comptes/1/transactions",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44307",
+							"path": [
+								"api",
+								"comptes",
+								"1",
+								"transactions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "All Comptes",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:44307/api/comptes",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44307",
+							"path": [
+								"api",
+								"comptes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "All Transactions",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:44307/api/transactions",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44307",
+							"path": [
+								"api",
+								"transactions"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Update",
+			"item": [
+				{
+					"name": "Compte 1",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"accountNumber\": 1,\r\n    \"accountBalance\": 99,\r\n    \"accountCreationDate\": \"2020-10-01\",\r\n    \"isActive\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:44307/api/comptes/1",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44307",
+							"path": [
+								"api",
+								"comptes",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Liste des comptes",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:44307/api/comptes",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44307",
+					"path": [
+						"api",
+						"comptes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Liste des transactions",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:44307/api/transactions",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44307",
+					"path": [
+						"api",
+						"transactions"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

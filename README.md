@@ -10,12 +10,11 @@ Projet personnel simulant des comptes et des opérations diverses.
 |---------------------------	|----------------------------	|-----------------------------------------------------	|-------------------------------	|---------------------------------------------	|
 | api/comptes               	| Création compte            	| Informations sur tous les comptes                   	| Erreur                        	| Effacer tous les comptes                    	|
 | api/comptes/1             	| Erreur                     	| Information sur un compte                           	| Mise à jour du compte         	| Effacer le compte                           	|
-| api/comptes/1/transaction 	| Erreur                     	| Information sur toutes les transactions d'un compte 	| Erreur                        	| Effacer toutes les transactions d'un compte 	|
-| api/transaction           	| Création d'une transaction 	| Informations sur toutes les transactions            	| Erreur                        	| Effacer toutes les transactions             	|
-| api/transaction/1         	| Erreur                     	| Information sur une transaction                     	| Mise à jour d'une transaction 	| Effacer une transaction                     	|
+| api/comptes/1/transactions 	| Erreur                     	| Information sur toutes les transactions d'un compte 	| Erreur                        	| Effacer toutes les transactions d'un compte 	|
+| api/transactions           	| Création d'une transaction 	| Informations sur toutes les transactions            	| Erreur                        	| Effacer toutes les transactions             	|
+| api/transactions/1         	| Erreur                     	| Information sur une transaction                     	| Mise à jour d'une transaction 	| Effacer une transaction                     	|
 
 ## Fonctionalités partielles et futures
-* Bug dans la mise à jour des soldes (transactions appliquées en double)
 * Tests unitaires
 * Tests Podman
 * GRPC
