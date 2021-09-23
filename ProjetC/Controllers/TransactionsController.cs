@@ -23,7 +23,8 @@ namespace ProjetC.Controllers
         {
             _context.Transaction.Add(transaction);
             await _context.SaveChangesAsync();
-
+            UpdateSoldes(transaction.TransactionOrigin);
+            UpdateSoldes(transaction.TransactionDestination);
             return CreatedAtAction("TransactionFind", new { id = transaction.TransactionNumber }, transaction);
         }
          /*
@@ -150,6 +151,24 @@ namespace ProjetC.Controllers
         public BadRequestResult Error()
         {
             return BadRequest();
+        }
+
+        private void UpdateSoldes(int account)
+        {
+            IEnumerable<Transaction> transactions = (IEnumerable<Transaction>)_context.Transaction.Where(s => (s.TransactionOrigin.Equals(account) || s.TransactionDestination.Equals(account)));
+            //var compte = await _context.Account.FindAsync(account);
+            Account compte = _context.Account.Find(account);
+            if (compte != null)
+            {
+                foreach (Transaction currentTransaction in transactions)
+                {
+                    if (account.Equals(currentTransaction.TransactionOrigin))
+                        compte.AccountBalance -= currentTransaction.TransactionAmount;
+                    else
+                        compte.AccountBalance += currentTransaction.TransactionAmount;
+                }
+                _context.SaveChanges();
+            }
         }
         private bool TransactionExists(int id)
         {

@@ -17,5 +17,9 @@ namespace ProjetC.Models
         public int TransactionDestination { get; set; }
         [Required]
         public bool isValid { get; set; }
+        public Transaction()
+        {
+            TransactionDate = DateTime.Now;
+        }
     }
 }

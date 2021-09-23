@@ -18,5 +18,10 @@ namespace ProjetC.Models
         public string AccountHolderLastName { get; set; }
         [Required]
         public bool isActive { get; set; }
+        public Account()
+        {
+            AccountBalance = 0;
+            AccountCreationDate = DateTime.Now;
+        }
     }
 }
