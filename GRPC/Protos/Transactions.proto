@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+option csharp_namespace = "GRPC";
+
+service Transaction {
+	rpc TransactionCreate (TransactionModel) returns (TransactionModel);
+	rpc TransactionList (google.protobuf.Empty) returns (stream TransactionModel);
+	rpc TransactionDeleteAll (google.protobuf.Empty) returns (google.protobuf.Empty);
+
+	rpc TransactionFind (TransactionModel) returns (TransactionModel);
+	rpc TransactionUpdate (TransactionModel) returns (TransactionModel);
+	rpc DeleteTransaction (TransactionModel) returns (google.protobuf.Empty);
+}
+message TransactionModel {
+	int32 TransactionNumber = 1;
+	int32 TransactionAmount = 2;
+    google.protobuf.Timestamp TransactionDate = 3;
+	int32 TransactionOrigin = 4;
+	int32 TransactionDestination = 5;
+	bool isValid = 6;
+}
