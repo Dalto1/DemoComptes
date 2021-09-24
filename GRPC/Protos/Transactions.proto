@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option csharp_namespace = "GRPC";
+
+service Transaction {
+	rpc TransactionList (TransactionLookupModel) returns (TransactionModel);
+}
+message TransactionLookupModel {
+	int32 userId = 1;
+}
+message TransactionModel {
+	int32 TransactionNumber = 1;
+	int32 TransactionAmount = 2;
+	string TransactionDate = 3;
+	int32 TransactionOrigin = 4;
+	int32 TransactionDestination = 5;
+	bool isValid = 6;
+}

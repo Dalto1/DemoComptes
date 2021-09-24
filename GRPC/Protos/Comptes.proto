@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option csharp_namespace = "GRPC";
+
+service Compte {
+	rpc AccountList (CompteLookupModel) returns (CompteModel);
+}
+message CompteLookupModel {
+	int32 userId = 1;
+}
+message CompteModel {
+	int32 AccountNumber = 1;
+	int32 AccountBalance = 2;
+	string AccountCreationDate = 3;
+	string AccountHolderFirstName = 4;
+	string AccountHolderLastName = 5;
+	bool isActive = 6;
+}
