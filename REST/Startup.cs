@@ -4,10 +4,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
-using ProjetC.Data;
-using ProjetC.Models;
+using REST.Data;
+using REST.Models;
 
-namespace ProjetC
+namespace REST
 {
     public class Startup
     {
@@ -28,10 +28,10 @@ namespace ProjetC
                     options.JsonSerializerOptions.WriteIndented = true;
                 });
             /*
-            services.AddDbContext<ProjetCContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("ProjetCContext")));
+            services.AddDbContext<RESTContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("RESTContext")));
             */
-            services.AddDbContext<ProjetCContext>(context =>
+            services.AddDbContext<RESTContext>(context =>
             {
                 context.UseInMemoryDatabase("Account");
             });

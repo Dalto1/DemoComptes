@@ -3,17 +3,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ProjetC.Data;
-using ProjetC.Models;
+using REST.Data;
+using REST.Models;
 
-namespace ProjetC.Controllers
+namespace REST.Controllers
 {
     [Route("api/transactions")]
     [ApiController]
     public class TransactionsController : ControllerBase
     {
-        private readonly ProjetCContext _context;
-        public TransactionsController(ProjetCContext context)
+        private readonly RESTContext _context;
+        public TransactionsController(RESTContext context)
         {
             _context = context;
         }

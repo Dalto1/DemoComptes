@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace ProjetC.Models
+namespace REST.Models
 {
     public class Transaction
     {

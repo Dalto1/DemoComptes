@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace ProjetC.Models
+namespace REST.Models
 {
     public class Account
     {
