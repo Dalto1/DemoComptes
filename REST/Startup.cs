@@ -26,12 +26,8 @@ namespace REST
                 {
                     options.JsonSerializerOptions.IgnoreNullValues = true;
                     options.JsonSerializerOptions.WriteIndented = true;
-                });
-            /*
-            services.AddDbContext<RESTContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("RESTContext")));
-            */
-            services.AddDbContext<RESTContext>(context =>
+                });            
+            services.AddDbContext<ProjectCContext>(context =>
             {
                 context.UseInMemoryDatabase("Account");
             });

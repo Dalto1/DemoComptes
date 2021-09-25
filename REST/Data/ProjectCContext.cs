@@ -3,9 +3,9 @@ using REST.Models;
 
 namespace REST.Data
 {
-    public class RESTContext : DbContext
+    public class ProjectCContext : DbContext
     {
-        public RESTContext(DbContextOptions<RESTContext> options) : base(options) { }
+        public ProjectCContext(DbContextOptions<ProjectCContext> options) : base(options) { }
 
         public DbSet<Account> Account { get; set; }
         public DbSet<Transaction> Transaction { get; set; }
