@@ -23,5 +23,5 @@ message CompteModel {
     google.protobuf.Timestamp AccountCreationDate = 3;
 	string AccountHolderFirstName = 4;
 	string AccountHolderLastName = 5;
-	bool isActive = 6;
+	bool IsActive = 6;
 }

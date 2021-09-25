@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using REST.Models;
+using Librairies.Models;
 
-namespace REST.Data
+namespace Librairies.Data
 {
     public class ProjectCContext : DbContext
     {

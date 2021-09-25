@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace REST.Models
+namespace Librairies.Models
 {
     public class Account
     {
