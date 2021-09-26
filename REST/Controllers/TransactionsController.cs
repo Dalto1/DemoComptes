@@ -3,8 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using REST.Data;
-using REST.Models;
+using Librairies.Data;
+using Librairies.Models;
 
 namespace REST.Controllers
 {
@@ -28,7 +28,7 @@ namespace REST.Controllers
             Account compteDestination = await _context.Account.FindAsync(transaction.TransactionDestination);
             if (transaction.TransactionAmount < 0)
             {
-                transaction.isValid = false;
+                transaction.IsValid = false;
             }
             else
             {

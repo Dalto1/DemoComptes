@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace REST.Models
+namespace Librairies.Models
 {
     public class Transaction
     {
@@ -16,7 +16,7 @@ namespace REST.Models
         [Required]
         public int TransactionDestination { get; set; }
         [Required]
-        public bool isValid { get; set; }
+        public bool IsValid { get; set; }
         public Transaction()
         {
             TransactionDate = DateTime.Now;

@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Librairies.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace GRPC
 {
@@ -13,6 +15,10 @@ namespace GRPC
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddGrpc();
+            services.AddDbContext<ProjectCContext>(context =>
+            {
+                context.UseInMemoryDatabase("Account");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -27,7 +33,7 @@ namespace GRPC
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGrpcService<ComptesService>();
+                endpoints.MapGrpcService<AccountsService>();
                 endpoints.MapGrpcService<TransactionsService>();
 
                 endpoints.MapGet("/", async context =>

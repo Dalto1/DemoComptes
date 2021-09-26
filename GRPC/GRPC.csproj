@@ -1,21 +1,26 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Protos\Comptes.proto" />
-    <None Remove="Protos\Transactions.proto" />
+    <None Remove="Protos\ProtoAccount.proto" />
+    <None Remove="Protos\ProtoTransaction.proto" />
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="Protos\Comptes.proto" GrpcServices="Server" />
-    <Protobuf Include="Protos\Transactions.proto" GrpcServices="Server" />
+    <Protobuf Include="Protos\ProtoAccount.proto" GrpcServices="Server" />
+    <Protobuf Include="Protos\ProtoTransaction.proto" GrpcServices="Server" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Grpc.AspNetCore" Version="2.34.0" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.39.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Librairies\Librairies.csproj" />
   </ItemGroup>
 
 </Project>
