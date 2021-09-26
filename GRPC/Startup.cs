@@ -17,7 +17,7 @@ namespace GRPC
             services.AddGrpc();
             services.AddDbContext<ProjectCContext>(context =>
             {
-                context.UseInMemoryDatabase("Account");
+                context.UseInMemoryDatabase("Database");
             });
         }
 

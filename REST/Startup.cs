@@ -28,7 +28,7 @@ namespace REST
                 });            
             services.AddDbContext<ProjectCContext>(context =>
             {
-                context.UseInMemoryDatabase("Account");
+                context.UseInMemoryDatabase("Database");
             });
         }
 
