@@ -94,7 +94,7 @@ namespace REST.Controllers
             return NoContent();
         }
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTransaction(int id)
+        public async Task<IActionResult> TransactionDelete(int id)
         {
             var transaction = await _context.Transaction.FindAsync(id);
             if (transaction == null)

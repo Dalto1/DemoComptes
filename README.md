@@ -14,6 +14,29 @@ Projet personnel simulant des comptes et des opérations diverses.
 | api/transactions           	| Création d'une transaction 	| Informations sur toutes les transactions            	| Erreur                        	| Effacer toutes les transactions             	|
 | api/transactions/1         	| Erreur                     	| Information sur une transaction                     	| Mise à jour d'une transaction 	| Effacer une transaction                     	|
 
+## GRPC API
+### Accounts
+|                             	| Input                 	| Output                	|
+|-----------------------------	|-----------------------	|-----------------------	|
+| AccountCreate               	| ProtoAccountModel     	| ProtoAccountModel     	|
+| AccountList                 	| google.protobuf.Empty 	| ProtoAccountModel     	|
+| AccountDeleteAll            	| google.protobuf.Empty 	| google.protobuf.Empty 	|
+| AccountFind                 	| ProtoAccountNumber    	| ProtoAccountModel     	|
+| AccountUpdate               	| ProtoAccountModel     	| ProtoAccountModel     	|
+| AccountDelete               	| ProtoAccountNumber    	| google.protobuf.Empty 	|
+| GetTransactionsByAccount    	| ProtoAccountNumber    	| ProtoAccountModel     	|
+| DeleteTransactionsByAccount 	| ProtoAccountNumber    	| google.protobuf.Empty 	|
+
+### Transactions
+|                      	| Input                  	| Output                	|
+|----------------------	|------------------------	|-----------------------	|
+| TransactionCreate    	| ProtoTransactionModel  	| ProtoTransactionModel 	|
+| TransactionList      	| google.protobuf.Empty  	| ProtoTransactionModel 	|
+| TransactionDeleteAll 	| google.protobuf.Empty  	| google.protobuf.Empty 	|
+| TransactionFind      	| ProtoTransactionNumber 	| ProtoTransactionModel 	|
+| TransactionUpdate    	| ProtoTransactionModel  	| ProtoTransactionModel 	|
+| TransactionDelete    	| ProtoTransactionNumber 	| google.protobuf.Empty 	|
+
 ## Fonctionalités partielles et futures
 * Tests unitaires
 * Tests Podman
