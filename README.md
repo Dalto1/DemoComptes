@@ -2,6 +2,7 @@
 ![GitHub](https://img.shields.io/github/license/Dalto1/ProjetC)
 ![GitHub last commit](https://img.shields.io/github/last-commit/Dalto1/ProjetC)
 ![Lines of code](https://img.shields.io/tokei/lines/github/Dalto1/ProjetC)
+
 Projet personnel simulant des comptes et des opérations diverses.
 
 ## Commandes
