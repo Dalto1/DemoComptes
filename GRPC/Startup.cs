@@ -33,7 +33,7 @@ namespace GRPC
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGrpcService<ComptesService>();
+                endpoints.MapGrpcService<AccountsService>();
                 endpoints.MapGrpcService<TransactionsService>();
 
                 endpoints.MapGet("/", async context =>

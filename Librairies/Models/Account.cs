@@ -16,7 +16,7 @@ namespace Librairies.Models
         [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Utilisez seulement des lettres")]
         public string AccountHolderLastName { get; set; }
         [Required]
-        public bool isActive { get; set; }
+        public bool IsActive { get; set; }
         public Account()
         {
             AccountBalance = 0;

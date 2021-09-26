@@ -28,7 +28,7 @@ namespace REST.Controllers
             Account compteDestination = await _context.Account.FindAsync(transaction.TransactionDestination);
             if (transaction.TransactionAmount < 0)
             {
-                transaction.isValid = false;
+                transaction.IsValid = false;
             }
             else
             {

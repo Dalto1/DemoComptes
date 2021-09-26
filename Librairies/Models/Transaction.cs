@@ -16,7 +16,7 @@ namespace Librairies.Models
         [Required]
         public int TransactionDestination { get; set; }
         [Required]
-        public bool isValid { get; set; }
+        public bool IsValid { get; set; }
         public Transaction()
         {
             TransactionDate = DateTime.Now;
