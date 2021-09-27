@@ -1,7 +1,7 @@
-# ProjetC
-![GitHub](https://img.shields.io/github/license/Dalto1/ProjetC)
-![GitHub last commit](https://img.shields.io/github/last-commit/Dalto1/ProjetC)
-![Lines of code](https://img.shields.io/tokei/lines/github/Dalto1/ProjetC)
+# DemoComptes
+![GitHub](https://img.shields.io/github/license/Dalto1/DemoComptes)
+![GitHub last commit](https://img.shields.io/github/last-commit/Dalto1/DemoComptes)
+![Lines of code](https://img.shields.io/tokei/lines/github/Dalto1/DemoComptes)
 
 Projet personnel simulant des comptes et des opérations diverses.
 
