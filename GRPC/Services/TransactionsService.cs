@@ -21,7 +21,6 @@ namespace GRPC
         {
             _context.Transaction.Add(ProtoTransactionModelToTransaction(request));
             await _context.SaveChangesAsync();
-
             return await Task.FromResult(request);
         }
         public override async Task<ProtoTransactionResponse> TransactionList(Empty request, ServerCallContext context)
@@ -44,56 +43,42 @@ namespace GRPC
         public override async Task<ProtoTransactionModel> TransactionFind(ProtoTransactionNumber request, ServerCallContext context)
         {
             var transaction = await _context.Transaction.FindAsync(request.TransactionNumber);
-
-            //TODO CHECK IF NULL
-            /*if (transaction == null)
+            if (transaction == null)
             {
-                return null;
-            }*/
-
+                throw new RpcException(new Status(StatusCode.NotFound, "Transaction introuvable"));
+            }
             return await Task.FromResult(TransactionToProtoTransactionModel(transaction));
         }
         public override async Task<ProtoTransactionModel> TransactionUpdate(ProtoTransactionModel request, ServerCallContext context)
         {
-            //TODO CHECK IF NULL or NOT FOUND
-            /*if (id != transaction.TransactionNumber)
-            {
-                return BadRequest();
-            }*/
-
             _context.Entry(ProtoTransactionModelToTransaction(request)).State = EntityState.Modified;
 
-            //try
-            //{
-            await _context.SaveChangesAsync();
-            /*}
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
             catch (DbUpdateConcurrencyException)
             {
-                if (!TransactionExists(id))
+                if (!_context.Transaction.Any(e => e.TransactionNumber == request.TransactionNumber))
                 {
-                    return NotFound();
+                    throw new RpcException(new Status(StatusCode.NotFound, "Transaction introuvable"));
                 }
                 else
                 {
                     throw;
                 }
             }
-
-            return NoContent();*/
             return await Task.FromResult(request);
         }
         public override async Task<Empty> DeleteTransaction(ProtoTransactionNumber request, ServerCallContext context)
         {
             var transaction = await _context.Transaction.FindAsync(request.TransactionNumber);
-            //TODO CHECK IF NULL
-            /*if (account == null)
+            if (transaction == null)
             {
-                return NotFound();
-            }*/
-
+                throw new RpcException(new Status(StatusCode.NotFound, "Transaction introuvable"));
+            }
             _context.Transaction.Remove(transaction);
             await _context.SaveChangesAsync();
-
             return new Empty();
         }
 

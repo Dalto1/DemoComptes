@@ -44,52 +44,40 @@ namespace GRPC
         {
             var account = await _context.Account.FindAsync(request.AccountNumber);
 
-            //TODO CHECK IF NULL
-            /*if (account == null)
+            if (account == null)
             {
-                return null;
-            }*/
-
+                throw new RpcException(new Status(StatusCode.NotFound, "Compte introuvable"));
+            }
             return await Task.FromResult(AccountToProtoCompteModel(account));
         }
         public override async Task<ProtoAccountModel> AccountUpdate(ProtoAccountModel request, ServerCallContext context)
         {
-            //TODO CHECK IF NULL or NOT FOUND
-            /*if (id != account.AccountNumber)
-            {
-                return BadRequest();
-            }*/
-
             _context.Entry(ProtoAccountModelToAccount(request)).State = EntityState.Modified;
 
-            //try
-            //{
-            await _context.SaveChangesAsync();
-            /*}
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
             catch (DbUpdateConcurrencyException)
             {
-                if (!AccountExists(id))
+                if (!_context.Account.Any(e => e.AccountNumber == request.AccountNumber))
                 {
-                    return NotFound();
+                    throw new RpcException(new Status(StatusCode.NotFound, "Compte introuvable"));
                 }
                 else
                 {
                     throw;
                 }
             }
-
-            return NoContent();*/
             return await Task.FromResult(request);
         }
         public override async Task<Empty> AccountDelete(ProtoAccountNumber request, ServerCallContext context)
         {
             var account = await _context.Account.FindAsync(request.AccountNumber);
-            //TODO CHECK IF NULL
-            /*if (account == null)
+            if (account == null)
             {
-                return NotFound();
-            }*/
-
+                throw new RpcException(new Status(StatusCode.NotFound, "Compte introuvable"));
+            }
             _context.Account.Remove(account);
             await _context.SaveChangesAsync();
 
@@ -152,6 +140,6 @@ namespace GRPC
                 TransactionDestination = transaction.TransactionDestination,
                 IsValid = transaction.IsValid
             };
-        } //TODO REDONDANT
+        }
     }
 }

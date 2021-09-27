@@ -2,7 +2,7 @@ syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/empty.proto";
-import "ProtoTransaction.proto";
+import "Protos/ProtoTransaction.proto";
 
 option csharp_namespace = "GRPC";
 
