@@ -67,14 +67,11 @@ namespace REST.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> TransactionUpdate(int id, Transaction transaction)
         {
-            //TODO MISE À JOUR DES SOLDES
             if (id != transaction.TransactionNumber)
             {
                 return BadRequest();
             }
-
             _context.Entry(transaction).State = EntityState.Modified;
-
             try
             {
                 await _context.SaveChangesAsync();

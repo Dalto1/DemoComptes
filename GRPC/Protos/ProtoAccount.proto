@@ -9,14 +9,14 @@ option csharp_namespace = "GRPC";
 service ProtoAccount {
 	rpc AccountCreate (ProtoAccountModel) returns (ProtoAccountModel);
 	rpc AccountList (google.protobuf.Empty) returns (ProtoAccountResponse);
-	rpc AccountDeleteAll (google.protobuf.Empty) returns (google.protobuf.Empty); //TODO retourner OK
+	rpc AccountDeleteAll (google.protobuf.Empty) returns (google.protobuf.Empty);
 	
 	rpc AccountFind (ProtoAccountNumber) returns (ProtoAccountModel);
 	rpc AccountUpdate (ProtoAccountModel) returns (ProtoAccountModel);
-	rpc AccountDelete (ProtoAccountNumber) returns (google.protobuf.Empty); //TODO retourner OK
+	rpc AccountDelete (ProtoAccountNumber) returns (google.protobuf.Empty);
 	
 	rpc GetTransactionsByAccount (ProtoAccountNumber) returns (ProtoTransactionResponse);
-	rpc DeleteTransactionsByAccount (ProtoAccountNumber) returns (google.protobuf.Empty); //TODO retourner OK
+	rpc DeleteTransactionsByAccount (ProtoAccountNumber) returns (google.protobuf.Empty);
 }
 message ProtoAccountModel {
 	int32 AccountNumber = 1;

@@ -107,8 +107,6 @@ namespace GRPC
             {
                 AccountNumber = account.AccountNumber,
                 AccountBalance = account.AccountBalance,
-                //TODO CHECK UTC
-                //AccountCreationDate = Timestamp.FromDateTime(DateTime.SpecifyKind(account.AccountCreationDate, DateTimeKind.Utc)),
                 AccountCreationDate = Timestamp.FromDateTime(account.AccountCreationDate),
                 AccountHolderFirstName = account.AccountHolderFirstName,
                 AccountHolderLastName = account.AccountHolderLastName,
@@ -133,8 +131,6 @@ namespace GRPC
             {
                 TransactionNumber = transaction.TransactionNumber,
                 TransactionAmount = transaction.TransactionAmount,
-                //TODO CHECK UTC
-                //AccountCreationDate = Timestamp.FromDateTime(DateTime.SpecifyKind(account.AccountCreationDate, DateTimeKind.Utc)),
                 TransactionDate = Timestamp.FromDateTime(transaction.TransactionDate),
                 TransactionOrigin = transaction.TransactionOrigin,
                 TransactionDestination = transaction.TransactionDestination,
