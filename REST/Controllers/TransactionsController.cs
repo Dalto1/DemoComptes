@@ -3,17 +3,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ProjetC.Data;
-using ProjetC.Models;
+using Domain.Data;
+using Domain.Models;
 
-namespace ProjetC.Controllers
+namespace REST.Controllers
 {
     [Route("api/transactions")]
     [ApiController]
     public class TransactionsController : ControllerBase
     {
-        private readonly ProjetCContext _context;
-        public TransactionsController(ProjetCContext context)
+        private readonly ProjectCContext _context;
+        public TransactionsController(ProjectCContext context)
         {
             _context = context;
         }
@@ -28,7 +28,7 @@ namespace ProjetC.Controllers
             Account compteDestination = await _context.Account.FindAsync(transaction.TransactionDestination);
             if (transaction.TransactionAmount < 0)
             {
-                transaction.isValid = false;
+                transaction.IsValid = false;
             }
             else
             {
@@ -67,14 +67,11 @@ namespace ProjetC.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> TransactionUpdate(int id, Transaction transaction)
         {
-            //TODO MISE À JOUR DES SOLDES
             if (id != transaction.TransactionNumber)
             {
                 return BadRequest();
             }
-
             _context.Entry(transaction).State = EntityState.Modified;
-
             try
             {
                 await _context.SaveChangesAsync();
@@ -94,7 +91,7 @@ namespace ProjetC.Controllers
             return NoContent();
         }
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTransaction(int id)
+        public async Task<IActionResult> TransactionDelete(int id)
         {
             var transaction = await _context.Transaction.FindAsync(id);
             if (transaction == null)

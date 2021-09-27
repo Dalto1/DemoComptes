@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "mssql2": {
+      "type": "mssql.local",
+      "connectionId": "ConnectionStrings:TransactionsContext"
+    },
+    "mssql1": {
+      "resourceId": null,
+      "type": "mssql.local",
+      "connectionId": "ConnectionStrings:ProjetCContext",
+      "secretStore": null
+    }
+  }
+}

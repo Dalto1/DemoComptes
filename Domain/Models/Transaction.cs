@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace ProjetC.Models
+namespace Domain.Models
 {
     public class Transaction
     {
@@ -16,7 +16,7 @@ namespace ProjetC.Models
         [Required]
         public int TransactionDestination { get; set; }
         [Required]
-        public bool isValid { get; set; }
+        public bool IsValid { get; set; }
         public Transaction()
         {
             TransactionDate = DateTime.Now;

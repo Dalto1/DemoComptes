@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace ProjetC.Models
+namespace Domain.Models
 {
     public class Account
     {
@@ -17,7 +16,7 @@ namespace ProjetC.Models
         [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Utilisez seulement des lettres")]
         public string AccountHolderLastName { get; set; }
         [Required]
-        public bool isActive { get; set; }
+        public bool IsActive { get; set; }
         public Account()
         {
             AccountBalance = 0;

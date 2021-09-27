@@ -1,19 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ProjetC.Data;
-using ProjetC.Models;
+using Domain.Data;
+using Domain.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ProjetC.Controllers
+namespace REST.Controllers
 {
     [Route("api/comptes")]
     [ApiController]
     public class AccountsController : ControllerBase
     {
-        private readonly ProjetCContext _context;
-        public AccountsController(ProjetCContext context)
+        private readonly ProjectCContext _context;
+        public AccountsController(ProjectCContext context)
         {
             _context = context;
         }
