@@ -1,11 +1,12 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
-using Librairies.Data;
-using Librairies.Models;
+using Domain.Data;
+using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GRPC.Tools;
 
 namespace GRPC
 {
@@ -19,7 +20,7 @@ namespace GRPC
 
         public override async Task<ProtoTransactionModel> TransactionCreate(ProtoTransactionModel request, ServerCallContext context)
         {
-            _context.Transaction.Add(ProtoTransactionModelToTransaction(request));
+            _context.Transaction.Add(Converter.ProtoTransactionModelToTransaction(request));
             await _context.SaveChangesAsync();
             return await Task.FromResult(request);
         }
@@ -29,7 +30,7 @@ namespace GRPC
             ProtoTransactionResponse response = new ProtoTransactionResponse();
             foreach (var trans in transactions)
             {
-                response.Transaction.Add(TransactionToProtoTransactionModel(trans));
+                response.Transaction.Add(Converter.TransactionToProtoTransactionModel(trans));
             }
             return await Task.FromResult(response);
         }
@@ -47,11 +48,11 @@ namespace GRPC
             {
                 throw new RpcException(new Status(StatusCode.NotFound, "Transaction introuvable"));
             }
-            return await Task.FromResult(TransactionToProtoTransactionModel(transaction));
+            return await Task.FromResult(Converter.TransactionToProtoTransactionModel(transaction));
         }
         public override async Task<ProtoTransactionModel> TransactionUpdate(ProtoTransactionModel request, ServerCallContext context)
         {
-            _context.Entry(ProtoTransactionModelToTransaction(request)).State = EntityState.Modified;
+            _context.Entry(Converter.ProtoTransactionModelToTransaction(request)).State = EntityState.Modified;
 
             try
             {
@@ -80,31 +81,6 @@ namespace GRPC
             _context.Transaction.Remove(transaction);
             await _context.SaveChangesAsync();
             return new Empty();
-        }
-
-        public ProtoTransactionModel TransactionToProtoTransactionModel(Transaction transaction)
-        {
-            return new ProtoTransactionModel
-            {
-                TransactionNumber = transaction.TransactionNumber,
-                TransactionAmount = transaction.TransactionAmount,
-                TransactionDate = Timestamp.FromDateTime(transaction.TransactionDate),
-                TransactionOrigin = transaction.TransactionOrigin,
-                TransactionDestination = transaction.TransactionDestination,
-                IsValid = transaction.IsValid
-            };
-        }
-        public Transaction ProtoTransactionModelToTransaction(ProtoTransactionModel model)
-        {
-            return new Transaction
-            {
-                TransactionNumber = model.TransactionNumber,
-                TransactionAmount = model.TransactionAmount,
-                TransactionDate = model.TransactionDate.ToDateTime(),
-                TransactionOrigin = model.TransactionOrigin,
-                TransactionDestination = model.TransactionDestination,
-                IsValid = model.IsValid
-            };
         }
     }
 }

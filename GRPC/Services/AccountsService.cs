@@ -1,11 +1,12 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
-using Librairies.Data;
-using Librairies.Models;
+using Domain.Data;
+using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GRPC.Tools;
 
 namespace GRPC
 {
@@ -18,7 +19,7 @@ namespace GRPC
         }
         public override async Task<ProtoAccountModel> AccountCreate(ProtoAccountModel request, ServerCallContext context)
         {
-            _context.Account.Add(ProtoAccountModelToAccount(request));
+            _context.Account.Add(Converter.ProtoAccountModelToAccount(request));
             await _context.SaveChangesAsync();
 
             return await Task.FromResult(request);
@@ -29,7 +30,7 @@ namespace GRPC
             ProtoAccountResponse response = new ProtoAccountResponse();
             foreach (var acc in accounts)
             {
-                response.Account.Add(AccountToProtoCompteModel(acc));
+                response.Account.Add(Converter.AccountToProtoCompteModel(acc));
             }
             return await Task.FromResult(response);
         }
@@ -48,11 +49,11 @@ namespace GRPC
             {
                 throw new RpcException(new Status(StatusCode.NotFound, "Compte introuvable"));
             }
-            return await Task.FromResult(AccountToProtoCompteModel(account));
+            return await Task.FromResult(Converter.AccountToProtoCompteModel(account));
         }
         public override async Task<ProtoAccountModel> AccountUpdate(ProtoAccountModel request, ServerCallContext context)
         {
-            _context.Entry(ProtoAccountModelToAccount(request)).State = EntityState.Modified;
+            _context.Entry(Converter.ProtoAccountModelToAccount(request)).State = EntityState.Modified;
 
             try
             {
@@ -90,7 +91,7 @@ namespace GRPC
             ProtoTransactionResponse response = new ProtoTransactionResponse();
             foreach (var trans in transactions)
             {
-                response.Transaction.Add(TransactionToProtoTransactionModel(trans));
+                response.Transaction.Add(Converter.TransactionToProtoTransactionModel(trans));
             }
             return await Task.FromResult(response);
         }
@@ -99,43 +100,6 @@ namespace GRPC
             _context.Transaction.RemoveRange(_context.Transaction.Where(s => (s.TransactionOrigin.Equals(request.AccountNumber) || s.TransactionDestination.Equals(request.AccountNumber))));
             await _context.SaveChangesAsync();
             return new Empty();
-        }
-
-        public ProtoAccountModel AccountToProtoCompteModel(Account account)
-        {
-            return new ProtoAccountModel
-            {
-                AccountNumber = account.AccountNumber,
-                AccountBalance = account.AccountBalance,
-                AccountCreationDate = Timestamp.FromDateTime(account.AccountCreationDate),
-                AccountHolderFirstName = account.AccountHolderFirstName,
-                AccountHolderLastName = account.AccountHolderLastName,
-                IsActive = account.IsActive
-            };
-        }
-        public Account ProtoAccountModelToAccount(ProtoAccountModel model)
-        {
-            return new Account
-            {
-                AccountNumber = model.AccountNumber,
-                AccountBalance = model.AccountBalance,
-                AccountCreationDate = model.AccountCreationDate.ToDateTime(),
-                AccountHolderFirstName = model.AccountHolderFirstName,
-                AccountHolderLastName = model.AccountHolderLastName,
-                IsActive = model.IsActive
-            };
-        }
-        public ProtoTransactionModel TransactionToProtoTransactionModel(Transaction transaction)
-        {
-            return new ProtoTransactionModel
-            {
-                TransactionNumber = transaction.TransactionNumber,
-                TransactionAmount = transaction.TransactionAmount,
-                TransactionDate = Timestamp.FromDateTime(transaction.TransactionDate),
-                TransactionOrigin = transaction.TransactionOrigin,
-                TransactionDestination = transaction.TransactionDestination,
-                IsValid = transaction.IsValid
-            };
         }
     }
 }
