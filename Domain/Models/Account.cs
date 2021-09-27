@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Librairies.Models
+namespace Domain.Models
 {
     public class Account
     {

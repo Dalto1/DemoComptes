@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Librairies.Data;
-using Librairies.Models;
+using Domain.Data;
+using Domain.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

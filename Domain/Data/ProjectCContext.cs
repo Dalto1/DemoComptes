@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Librairies.Models;
+using Domain.Models;
 
-namespace Librairies.Data
+namespace Domain.Data
 {
     public class ProjectCContext : DbContext
     {
