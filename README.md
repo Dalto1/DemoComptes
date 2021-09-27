@@ -10,7 +10,6 @@ Voir le [Wiki](../../wiki/Accueil) pour plus d'informations
 
 ## Fonctionalités partielles et futures
 * Tests unitaires
-* GRPC et Domaine
 
 ## License
 
