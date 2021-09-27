@@ -24,15 +24,15 @@ namespace GRPC
 
             return await Task.FromResult(request);
         }
-        public override async Task TransactionList(Empty request, IServerStreamWriter<ProtoTransactionModel> responseStream, ServerCallContext context)
+        public override async Task<ProtoTransactionResponse> TransactionList(Empty request, ServerCallContext context)
         {
-            //TODO Retourner un tableau
             List<Transaction> transactions = await _context.Transaction.ToListAsync();
-
+            ProtoTransactionResponse response = new ProtoTransactionResponse();
             foreach (var trans in transactions)
             {
-                await responseStream.WriteAsync(TransactionToProtoTransactionModel(trans));
+                response.Transaction.Add(TransactionToProtoTransactionModel(trans));
             }
+            return await Task.FromResult(response);
         }
         public override async Task<Empty> TransactionDeleteAll(Empty request, ServerCallContext context)
         {

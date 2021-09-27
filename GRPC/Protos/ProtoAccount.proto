@@ -2,19 +2,20 @@ syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/empty.proto";
+import "ProtoTransaction.proto";
 
 option csharp_namespace = "GRPC";
 
 service ProtoAccount {
 	rpc AccountCreate (ProtoAccountModel) returns (ProtoAccountModel);
-	rpc AccountList (google.protobuf.Empty) returns (stream ProtoAccountModel);
+	rpc AccountList (google.protobuf.Empty) returns (ProtoAccountResponse);
 	rpc AccountDeleteAll (google.protobuf.Empty) returns (google.protobuf.Empty); //TODO retourner OK
 	
 	rpc AccountFind (ProtoAccountNumber) returns (ProtoAccountModel);
 	rpc AccountUpdate (ProtoAccountModel) returns (ProtoAccountModel);
 	rpc AccountDelete (ProtoAccountNumber) returns (google.protobuf.Empty); //TODO retourner OK
 	
-	rpc GetTransactionsByAccount (ProtoAccountNumber) returns (stream ProtoAccountModel);
+	rpc GetTransactionsByAccount (ProtoAccountNumber) returns (ProtoTransactionResponse);
 	rpc DeleteTransactionsByAccount (ProtoAccountNumber) returns (google.protobuf.Empty); //TODO retourner OK
 }
 message ProtoAccountModel {
@@ -24,6 +25,9 @@ message ProtoAccountModel {
 	string AccountHolderFirstName = 4;
 	string AccountHolderLastName = 5;
 	bool IsActive = 6;
+}
+message ProtoAccountResponse {
+	repeated ProtoAccountModel Account = 1;
 }
 message ProtoAccountNumber {
 	int32 AccountNumber = 1;

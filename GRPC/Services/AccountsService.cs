@@ -23,15 +23,15 @@ namespace GRPC
 
             return await Task.FromResult(request);
         }
-        public override async Task AccountList(Empty request, IServerStreamWriter<ProtoAccountModel> responseStream, ServerCallContext context)
+        public override async Task<ProtoAccountResponse> AccountList(Empty request, ServerCallContext context)
         {
-            //TODO Retourner un tableau
-            List<Account> comptes = await _context.Account.ToListAsync();
-
-            foreach (var comp in comptes)
+            List<Account> accounts = await _context.Account.ToListAsync();
+            ProtoAccountResponse response = new ProtoAccountResponse();
+            foreach (var acc in accounts)
             {
-                await responseStream.WriteAsync(AccountToProtoCompteModel(comp));
+                response.Account.Add(AccountToProtoCompteModel(acc));
             }
+            return await Task.FromResult(response);
         }
         public override async Task<Empty> AccountDeleteAll(Empty request, ServerCallContext context)
         {
@@ -64,7 +64,7 @@ namespace GRPC
 
             //try
             //{
-                await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             /*}
             catch (DbUpdateConcurrencyException)
             {
@@ -95,11 +95,16 @@ namespace GRPC
 
             return new Empty();
         }
-
-        public override  Task GetTransactionsByAccount(ProtoAccountNumber request, IServerStreamWriter<ProtoAccountModel> responseStream, ServerCallContext context)
+        public override async Task<ProtoTransactionResponse> GetTransactionsByAccount(ProtoAccountNumber request, ServerCallContext context)
         {
-            //TODO
-            return null;
+            List<Transaction> transactions = await _context.Transaction.Where(s => (s.TransactionOrigin.Equals(request.AccountNumber) || s.TransactionDestination.Equals(request.AccountNumber))).ToListAsync();
+
+            ProtoTransactionResponse response = new ProtoTransactionResponse();
+            foreach (var trans in transactions)
+            {
+                response.Transaction.Add(TransactionToProtoTransactionModel(trans));
+            }
+            return await Task.FromResult(response);
         }
         public override async Task<Empty> DeleteTransactionsByAccount(ProtoAccountNumber request, ServerCallContext context)
         {
@@ -134,5 +139,19 @@ namespace GRPC
                 IsActive = model.IsActive
             };
         }
+        public ProtoTransactionModel TransactionToProtoTransactionModel(Transaction transaction)
+        {
+            return new ProtoTransactionModel
+            {
+                TransactionNumber = transaction.TransactionNumber,
+                TransactionAmount = transaction.TransactionAmount,
+                //TODO CHECK UTC
+                //AccountCreationDate = Timestamp.FromDateTime(DateTime.SpecifyKind(account.AccountCreationDate, DateTimeKind.Utc)),
+                TransactionDate = Timestamp.FromDateTime(transaction.TransactionDate),
+                TransactionOrigin = transaction.TransactionOrigin,
+                TransactionDestination = transaction.TransactionDestination,
+                IsValid = transaction.IsValid
+            };
+        } //TODO REDONDANT
     }
 }

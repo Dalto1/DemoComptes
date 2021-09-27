@@ -7,7 +7,7 @@ option csharp_namespace = "GRPC";
 
 service ProtoTransaction {
 	rpc TransactionCreate (ProtoTransactionModel) returns (ProtoTransactionModel);
-	rpc TransactionList (google.protobuf.Empty) returns (stream ProtoTransactionModel);
+	rpc TransactionList (google.protobuf.Empty) returns (ProtoTransactionResponse);
 	rpc TransactionDeleteAll (google.protobuf.Empty) returns (google.protobuf.Empty);
 
 	rpc TransactionFind (ProtoTransactionNumber) returns (ProtoTransactionModel);
@@ -21,6 +21,9 @@ message ProtoTransactionModel {
 	int32 TransactionOrigin = 4;
 	int32 TransactionDestination = 5;
 	bool isValid = 6;
+}
+message ProtoTransactionResponse {
+	repeated ProtoTransactionModel Transaction = 1;
 }
 message ProtoTransactionNumber {
 	int32 TransactionNumber = 1;
