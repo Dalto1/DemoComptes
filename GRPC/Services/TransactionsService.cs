@@ -24,21 +24,36 @@ namespace GRPC
             await _context.SaveChangesAsync();
             return await Task.FromResult(request);
         }
-        public override async Task<ProtoTransactionResponse> TransactionList(Empty request, ServerCallContext context)
+        public override async Task<ProtoTransactionModelList> TransactionList(Empty request, ServerCallContext context)
         {
             List<Transaction> transactions = await _context.Transaction.ToListAsync();
-            ProtoTransactionResponse response = new ProtoTransactionResponse();
+            ProtoTransactionModelList response = new ProtoTransactionModelList();
             foreach (var trans in transactions)
             {
                 response.Transaction.Add(Converter.TransactionToProtoTransactionModel(trans));
             }
             return await Task.FromResult(response);
         }
-        public override async Task<Empty> TransactionDeleteAll(Empty request, ServerCallContext context)
+        public override async Task<ProtoTransactionDeleteAllStatus> TransactionDeleteAll(Empty request, ServerCallContext context)
         {
-            _context.Transaction.RemoveRange(_context.Transaction);
-            await _context.SaveChangesAsync();
-            return new Empty();
+            List<Transaction> transactions = await _context.Transaction.ToListAsync();
+            int transactionsCount = transactions.Count;
+            bool status = false;
+            if (transactionsCount > 0)
+            {
+                try
+                {
+                    _context.Transaction.RemoveRange(transactions);
+                    await _context.SaveChangesAsync();
+                    status = true;
+                }
+                catch { }
+            }
+            return new ProtoTransactionDeleteAllStatus
+            {
+                Success = status,
+                Deleted = transactionsCount
+            };
         }
 
         public override async Task<ProtoTransactionModel> TransactionFind(ProtoTransactionNumber request, ServerCallContext context)
@@ -71,16 +86,24 @@ namespace GRPC
             }
             return await Task.FromResult(request);
         }
-        public override async Task<Empty> DeleteTransaction(ProtoTransactionNumber request, ServerCallContext context)
+        public override async Task<ProtoTransactionDeleteStatus> DeleteTransaction(ProtoTransactionNumber request, ServerCallContext context)
         {
+            bool status = false;
             var transaction = await _context.Transaction.FindAsync(request.TransactionNumber);
-            if (transaction == null)
+            if (transaction != null)
             {
-                throw new RpcException(new Status(StatusCode.NotFound, "Transaction introuvable"));
+                try
+                {
+                    _context.Transaction.Remove(transaction);
+                    await _context.SaveChangesAsync();
+                    status = true;
+                }
+                catch { }
             }
-            _context.Transaction.Remove(transaction);
-            await _context.SaveChangesAsync();
-            return new Empty();
+            return new ProtoTransactionDeleteStatus
+            {
+                Success = status
+            };
         }
     }
 }

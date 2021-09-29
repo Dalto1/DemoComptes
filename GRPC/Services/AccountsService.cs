@@ -24,21 +24,36 @@ namespace GRPC
 
             return await Task.FromResult(request);
         }
-        public override async Task<ProtoAccountResponse> AccountList(Empty request, ServerCallContext context)
+        public override async Task<ProtoAccountModelList> AccountList(Empty request, ServerCallContext context)
         {
             List<Account> accounts = await _context.Account.ToListAsync();
-            ProtoAccountResponse response = new ProtoAccountResponse();
+            ProtoAccountModelList response = new ProtoAccountModelList();
             foreach (var acc in accounts)
             {
                 response.Account.Add(Converter.AccountToProtoCompteModel(acc));
             }
             return await Task.FromResult(response);
         }
-        public override async Task<Empty> AccountDeleteAll(Empty request, ServerCallContext context)
+        public override async Task<ProtoAccountDeleteAllStatus> AccountDeleteAll(Empty request, ServerCallContext context)
         {
-            _context.Account.RemoveRange(_context.Account);
-            await _context.SaveChangesAsync();
-            return new Empty();
+            List<Account> accounts = await _context.Account.ToListAsync();
+            int accountsCount = accounts.Count;
+            bool status = false;
+            if (accountsCount > 0)
+            {
+                try
+                {
+                    _context.Account.RemoveRange(accounts);
+                    await _context.SaveChangesAsync();
+                    status = true;
+                }
+                catch { }
+            }
+            return new ProtoAccountDeleteAllStatus
+            {
+                Success = status,
+                Deleted = accountsCount
+            };
         }
 
         public override async Task<ProtoAccountModel> AccountFind(ProtoAccountNumber request, ServerCallContext context)
@@ -72,34 +87,57 @@ namespace GRPC
             }
             return await Task.FromResult(request);
         }
-        public override async Task<Empty> AccountDelete(ProtoAccountNumber request, ServerCallContext context)
+        public override async Task<ProtoAccountDeleteStatus> AccountDelete(ProtoAccountNumber request, ServerCallContext context)
         {
+            bool status = false;
             var account = await _context.Account.FindAsync(request.AccountNumber);
-            if (account == null)
+            if (account != null)
             {
-                throw new RpcException(new Status(StatusCode.NotFound, "Compte introuvable"));
+                try
+                {
+                    _context.Account.Remove(account);
+                    await _context.SaveChangesAsync();
+                    status = true;
+                }
+                catch { }
             }
-            _context.Account.Remove(account);
-            await _context.SaveChangesAsync();
-
-            return new Empty();
+            return new ProtoAccountDeleteStatus
+            {
+                Success = status
+            };
         }
-        public override async Task<ProtoTransactionResponse> GetTransactionsByAccount(ProtoAccountNumber request, ServerCallContext context)
+
+        public override async Task<ProtoTransactionModelList> GetTransactionsByAccount(ProtoAccountNumber request, ServerCallContext context)
         {
             List<Transaction> transactions = await _context.Transaction.Where(s => (s.TransactionOrigin.Equals(request.AccountNumber) || s.TransactionDestination.Equals(request.AccountNumber))).ToListAsync();
 
-            ProtoTransactionResponse response = new ProtoTransactionResponse();
+            ProtoTransactionModelList response = new ProtoTransactionModelList();
             foreach (var trans in transactions)
             {
                 response.Transaction.Add(Converter.TransactionToProtoTransactionModel(trans));
             }
             return await Task.FromResult(response);
         }
-        public override async Task<Empty> DeleteTransactionsByAccount(ProtoAccountNumber request, ServerCallContext context)
+        public override async Task<ProtoTransactionDeleteAllStatus> DeleteTransactionsByAccount(ProtoAccountNumber request, ServerCallContext context)
         {
-            _context.Transaction.RemoveRange(_context.Transaction.Where(s => (s.TransactionOrigin.Equals(request.AccountNumber) || s.TransactionDestination.Equals(request.AccountNumber))));
-            await _context.SaveChangesAsync();
-            return new Empty();
+            List<Transaction> transactions = await _context.Transaction.Where(s => (s.TransactionOrigin.Equals(request.AccountNumber) || s.TransactionDestination.Equals(request.AccountNumber))).ToListAsync();
+            int transactionsCount = transactions.Count;
+            bool status = false;
+            if (transactionsCount > 0)
+            {
+                try
+                {
+                    _context.Transaction.RemoveRange(transactions);
+                    await _context.SaveChangesAsync();
+                    status = true;
+                }
+                catch { }
+            }
+            return new ProtoTransactionDeleteAllStatus
+            {
+                Success = status,
+                Deleted = transactionsCount
+            };
         }
     }
 }

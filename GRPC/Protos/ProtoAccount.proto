@@ -8,15 +8,15 @@ option csharp_namespace = "GRPC";
 
 service ProtoAccount {
 	rpc AccountCreate (ProtoAccountModel) returns (ProtoAccountModel);
-	rpc AccountList (google.protobuf.Empty) returns (ProtoAccountResponse);
-	rpc AccountDeleteAll (google.protobuf.Empty) returns (google.protobuf.Empty);
+	rpc AccountList (google.protobuf.Empty) returns (ProtoAccountModelList);
+	rpc AccountDeleteAll (google.protobuf.Empty) returns (ProtoAccountDeleteAllStatus);
 	
 	rpc AccountFind (ProtoAccountNumber) returns (ProtoAccountModel);
 	rpc AccountUpdate (ProtoAccountModel) returns (ProtoAccountModel);
-	rpc AccountDelete (ProtoAccountNumber) returns (google.protobuf.Empty);
+	rpc AccountDelete (ProtoAccountNumber) returns (ProtoAccountDeleteStatus);
 	
-	rpc GetTransactionsByAccount (ProtoAccountNumber) returns (ProtoTransactionResponse);
-	rpc DeleteTransactionsByAccount (ProtoAccountNumber) returns (google.protobuf.Empty);
+	rpc GetTransactionsByAccount (ProtoAccountNumber) returns (ProtoTransactionModelList);
+	rpc DeleteTransactionsByAccount (ProtoAccountNumber) returns (ProtoTransactionDeleteAllStatus);
 }
 message ProtoAccountModel {
 	int32 AccountNumber = 1;
@@ -26,9 +26,16 @@ message ProtoAccountModel {
 	string AccountHolderLastName = 5;
 	bool IsActive = 6;
 }
-message ProtoAccountResponse {
+message ProtoAccountModelList {
 	repeated ProtoAccountModel Account = 1;
 }
 message ProtoAccountNumber {
 	int32 AccountNumber = 1;
+}
+message ProtoAccountDeleteStatus {
+	bool Success = 1;
+}
+message ProtoAccountDeleteAllStatus {
+	bool Success = 1;
+	int32 Deleted = 2;
 }
