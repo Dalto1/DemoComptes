@@ -20,9 +20,22 @@ namespace GRPC
 
         public override async Task<ProtoTransactionModel> TransactionCreate(ProtoTransactionModel request, ServerCallContext context)
         {
-            _context.Transaction.Add(Converter.ProtoTransactionModelToTransaction(request));
-            await _context.SaveChangesAsync();
-            return await Task.FromResult(request);
+            Transaction transaction = Converter.ProtoTransactionModelToTransaction(request);
+            Account compteOrigine = await _context.Account.FindAsync(transaction.TransactionOrigin);
+            Account compteDestination = await _context.Account.FindAsync(transaction.TransactionDestination);
+            if (transaction.TransactionAmount < 0)
+            {
+                transaction.IsValid = false;
+            }
+            else
+            {
+                if (compteOrigine != null) compteOrigine.AccountBalance -= transaction.TransactionAmount;
+                if (compteDestination != null) compteDestination.AccountBalance += transaction.TransactionAmount;
+                _context.Transaction.Add(transaction);
+                await _context.SaveChangesAsync();
+            }
+
+            return await Task.FromResult(Converter.TransactionToProtoTransactionModel(transaction));
         }
         public override async Task<ProtoTransactionModelList> TransactionList(Empty request, ServerCallContext context)
         {

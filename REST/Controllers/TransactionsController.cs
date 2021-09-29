@@ -21,8 +21,6 @@ namespace REST.Controllers
         [HttpPost]
         public async Task<ActionResult<Transaction>> TransactionCreate(Transaction transaction)
         {
-            _context.Transaction.Add(transaction);
-            await _context.SaveChangesAsync(); 
             
             Account compteOrigine = await _context.Account.FindAsync(transaction.TransactionOrigin);
             Account compteDestination = await _context.Account.FindAsync(transaction.TransactionDestination);
@@ -34,8 +32,9 @@ namespace REST.Controllers
             {
                 if (compteOrigine != null) compteOrigine.AccountBalance -= transaction.TransactionAmount;
                 if (compteDestination != null) compteDestination.AccountBalance += transaction.TransactionAmount;
+                _context.Transaction.Add(transaction);
+                await _context.SaveChangesAsync();
             }
-            await _context.SaveChangesAsync();
 
             return CreatedAtAction("TransactionFind", new { id = transaction.TransactionNumber }, transaction);
         }
