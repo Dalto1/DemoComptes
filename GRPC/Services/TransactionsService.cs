@@ -11,8 +11,8 @@ namespace GRPC
 {
     public class TransactionsService : ProtoTransaction.ProtoTransactionBase
     {
-        private readonly ProjectCContext _context;
-        public TransactionsService(ProjectCContext context)
+        private readonly DemoComptesContext _context;
+        public TransactionsService(DemoComptesContext context)
         {
             _context = context;
         }

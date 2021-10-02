@@ -12,8 +12,8 @@ namespace REST.Controllers
     [ApiController]
     public class AccountsController : ControllerBase
     {
-        private readonly ProjectCContext _context;
-        public AccountsController(ProjectCContext context)
+        private readonly DemoComptesContext _context;
+        public AccountsController(DemoComptesContext context)
         {
             _context = context;
         }

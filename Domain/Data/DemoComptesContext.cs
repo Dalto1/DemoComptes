@@ -3,9 +3,9 @@ using Domain.Models;
 
 namespace Domain.Data
 {
-    public class ProjectCContext : DbContext
+    public class DemoComptesContext : DbContext
     {
-        public ProjectCContext(DbContextOptions<ProjectCContext> options) : base(options) { }
+        public DemoComptesContext(DbContextOptions<DemoComptesContext> options) : base(options) { }
 
         public DbSet<Account> Account { get; set; }
         public DbSet<Transaction> Transaction { get; set; }

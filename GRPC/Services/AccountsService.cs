@@ -11,8 +11,8 @@ namespace GRPC
 {
     public class AccountsService : ProtoAccount.ProtoAccountBase
     {
-        private readonly ProjectCContext _context;
-        public AccountsService(ProjectCContext context)
+        private readonly DemoComptesContext _context;
+        public AccountsService(DemoComptesContext context)
         {
             _context = context;
         }
