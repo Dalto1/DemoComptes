@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GRPC.Tools;
 
 namespace GRPC
 {
@@ -17,24 +16,50 @@ namespace GRPC
         {
             _context = context;
         }
-        public override async Task<ProtoAccountModel> AccountCreate(ProtoAccountModel request, ServerCallContext context)
+        public override async Task<AccountCreateResponse> AccountCreate(AccountCreateParams request, ServerCallContext context)
         {
-            _context.Account.Add(Converter.ProtoAccountModelToAccount(request));
+            Account account = new Account
+            {
+                AccountNumber = request.AccountNumber,
+                AccountBalance = request.AccountBalance,
+                AccountCreationDate = request.AccountCreationDate.ToDateTime(),
+                AccountHolderFirstName = request.AccountHolderFirstName,
+                AccountHolderLastName = request.AccountHolderLastName,
+                IsActive = request.IsActive
+            };
+            _context.Account.Add(account);
             await _context.SaveChangesAsync();
 
-            return await Task.FromResult(request);
+            return new AccountCreateResponse
+            {
+                AccountNumber = request.AccountNumber,
+                AccountBalance = request.AccountBalance,
+                AccountCreationDate = request.AccountCreationDate,
+                AccountHolderFirstName = request.AccountHolderFirstName,
+                AccountHolderLastName = request.AccountHolderLastName,
+                IsActive = request.IsActive
+            };
         }
-        public override async Task<ProtoAccountModelList> AccountList(Empty request, ServerCallContext context)
+        public override async Task<AccountListResponse> AccountList(Empty request, ServerCallContext context)
         {
             List<Account> accounts = await _context.Account.ToListAsync();
-            ProtoAccountModelList response = new ProtoAccountModelList();
+            AccountListResponse response = new AccountListResponse();
             foreach (var acc in accounts)
             {
-                response.Account.Add(Converter.AccountToProtoCompteModel(acc));
+                AccountListItem item = new AccountListItem
+                {
+                    AccountNumber = acc.AccountNumber,
+                    AccountBalance = acc.AccountBalance,
+                    AccountCreationDate = Timestamp.FromDateTime(acc.AccountCreationDate),
+                    AccountHolderFirstName = acc.AccountHolderFirstName,
+                    AccountHolderLastName = acc.AccountHolderLastName,
+                    IsActive = acc.IsActive
+                };
+                response.Account.Add(item);
             }
             return await Task.FromResult(response);
         }
-        public override async Task<ProtoAccountDeleteAllStatus> AccountDeleteAll(Empty request, ServerCallContext context)
+        public override async Task<AccountDeleteAllResponse> AccountDeleteAll(Empty request, ServerCallContext context)
         {
             List<Account> accounts = await _context.Account.ToListAsync();
             int accountsCount = accounts.Count;
@@ -49,14 +74,14 @@ namespace GRPC
                 }
                 catch { }
             }
-            return new ProtoAccountDeleteAllStatus
+            return new AccountDeleteAllResponse
             {
                 Success = status,
                 Deleted = accountsCount
             };
         }
 
-        public override async Task<ProtoAccountModel> AccountFind(ProtoAccountNumber request, ServerCallContext context)
+        public override async Task<AccountFindResponse> AccountFind(AccountFindParams request, ServerCallContext context)
         {
             var account = await _context.Account.FindAsync(request.AccountNumber);
 
@@ -64,11 +89,28 @@ namespace GRPC
             {
                 throw new RpcException(new Status(StatusCode.NotFound, "Compte introuvable"));
             }
-            return await Task.FromResult(Converter.AccountToProtoCompteModel(account));
+            return new AccountFindResponse
+            {
+                AccountNumber = account.AccountNumber,
+                AccountBalance = account.AccountBalance,
+                AccountCreationDate = Timestamp.FromDateTime(account.AccountCreationDate),
+                AccountHolderFirstName = account.AccountHolderFirstName,
+                AccountHolderLastName = account.AccountHolderLastName,
+                IsActive = account.IsActive
+            };
         }
-        public override async Task<ProtoAccountModel> AccountUpdate(ProtoAccountModel request, ServerCallContext context)
+        public override async Task<AccountUpdateResponse> AccountUpdate(AccountUpdateParams request, ServerCallContext context)
         {
-            _context.Entry(Converter.ProtoAccountModelToAccount(request)).State = EntityState.Modified;
+            Account account = new Account
+            {
+                AccountNumber = request.AccountNumber,
+                AccountBalance = request.AccountBalance,
+                AccountCreationDate = request.AccountCreationDate.ToDateTime(),
+                AccountHolderFirstName = request.AccountHolderFirstName,
+                AccountHolderLastName = request.AccountHolderLastName,
+                IsActive = request.IsActive
+            };
+            _context.Entry(account).State = EntityState.Modified;
 
             try
             {
@@ -85,9 +127,17 @@ namespace GRPC
                     throw;
                 }
             }
-            return await Task.FromResult(request);
+            return new AccountUpdateResponse
+            {
+                AccountNumber = account.AccountNumber,
+                AccountBalance = account.AccountBalance,
+                AccountCreationDate = Timestamp.FromDateTime(account.AccountCreationDate),
+                AccountHolderFirstName = account.AccountHolderFirstName,
+                AccountHolderLastName = account.AccountHolderLastName,
+                IsActive = account.IsActive
+            };
         }
-        public override async Task<ProtoAccountDeleteStatus> AccountDelete(ProtoAccountNumber request, ServerCallContext context)
+        public override async Task<AccountDeleteResponse> AccountDelete(AccountDeleteParams request, ServerCallContext context)
         {
             bool status = false;
             var account = await _context.Account.FindAsync(request.AccountNumber);
@@ -101,24 +151,33 @@ namespace GRPC
                 }
                 catch { }
             }
-            return new ProtoAccountDeleteStatus
+            return new AccountDeleteResponse
             {
                 Success = status
             };
         }
 
-        public override async Task<ProtoTransactionModelList> GetTransactionsByAccount(ProtoAccountNumber request, ServerCallContext context)
+        public override async Task<TransactionListReponse> GetTransactionsByAccount(GetTransactionsByAccountParams request, ServerCallContext context)
         {
             List<Transaction> transactions = await _context.Transaction.Where(s => (s.TransactionOrigin.Equals(request.AccountNumber) || s.TransactionDestination.Equals(request.AccountNumber))).ToListAsync();
 
-            ProtoTransactionModelList response = new ProtoTransactionModelList();
+            TransactionListReponse response = new TransactionListReponse();
             foreach (var trans in transactions)
             {
-                response.Transaction.Add(Converter.TransactionToProtoTransactionModel(trans));
+                TransactionListItem item = new TransactionListItem
+                {
+                    TransactionNumber = trans.TransactionNumber,
+                    TransactionAmount = trans.TransactionAmount,
+                    TransactionDate = Timestamp.FromDateTime(trans.TransactionDate),
+                    TransactionOrigin = trans.TransactionOrigin,
+                    TransactionDestination = trans.TransactionDestination,
+                    IsValid = trans.IsValid
+                };
+                response.Transaction.Add(item);
             }
             return await Task.FromResult(response);
         }
-        public override async Task<ProtoTransactionDeleteAllStatus> DeleteTransactionsByAccount(ProtoAccountNumber request, ServerCallContext context)
+        public override async Task<TransactionDeleteAllResponse> DeleteTransactionsByAccount(DeleteTransactionsByAccountParams request, ServerCallContext context)
         {
             List<Transaction> transactions = await _context.Transaction.Where(s => (s.TransactionOrigin.Equals(request.AccountNumber) || s.TransactionDestination.Equals(request.AccountNumber))).ToListAsync();
             int transactionsCount = transactions.Count;
@@ -133,7 +192,7 @@ namespace GRPC
                 }
                 catch { }
             }
-            return new ProtoTransactionDeleteAllStatus
+            return new TransactionDeleteAllResponse
             {
                 Success = status,
                 Deleted = transactionsCount

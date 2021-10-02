@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GRPC.Tools;
 
 namespace GRPC
 {
@@ -18,9 +17,17 @@ namespace GRPC
             _context = context;
         }
 
-        public override async Task<ProtoTransactionModel> TransactionCreate(ProtoTransactionModel request, ServerCallContext context)
+        public override async Task<TransactionCreateResponse> TransactionCreate(TransactionCreateParams request, ServerCallContext context)
         {
-            Transaction transaction = Converter.ProtoTransactionModelToTransaction(request);
+            Transaction transaction = new Transaction
+            {
+                TransactionNumber = request.TransactionNumber,
+                TransactionAmount = request.TransactionAmount,
+                TransactionDate = request.TransactionDate.ToDateTime(),
+                TransactionOrigin = request.TransactionOrigin,
+                TransactionDestination = request.TransactionDestination,
+                IsValid = request.IsValid
+            };
             Account compteOrigine = await _context.Account.FindAsync(transaction.TransactionOrigin);
             Account compteDestination = await _context.Account.FindAsync(transaction.TransactionDestination);
             if (transaction.TransactionAmount < 0)
@@ -35,19 +42,36 @@ namespace GRPC
                 await _context.SaveChangesAsync();
             }
 
-            return await Task.FromResult(Converter.TransactionToProtoTransactionModel(transaction));
+            return new TransactionCreateResponse
+            {
+                TransactionNumber = transaction.TransactionNumber,
+                TransactionAmount = transaction.TransactionAmount,
+                TransactionDate = Timestamp.FromDateTime(transaction.TransactionDate),
+                TransactionOrigin = transaction.TransactionOrigin,
+                TransactionDestination = transaction.TransactionDestination,
+                IsValid = transaction.IsValid
+            };
         }
-        public override async Task<ProtoTransactionModelList> TransactionList(Empty request, ServerCallContext context)
+        public override async Task<TransactionListReponse> TransactionList(Empty request, ServerCallContext context)
         {
             List<Transaction> transactions = await _context.Transaction.ToListAsync();
-            ProtoTransactionModelList response = new ProtoTransactionModelList();
+            TransactionListReponse response = new TransactionListReponse();
             foreach (var trans in transactions)
             {
-                response.Transaction.Add(Converter.TransactionToProtoTransactionModel(trans));
+                TransactionListItem item = new TransactionListItem
+                {
+                    TransactionNumber = trans.TransactionNumber,
+                    TransactionAmount = trans.TransactionAmount,
+                    TransactionDate = Timestamp.FromDateTime(trans.TransactionDate),
+                    TransactionOrigin = trans.TransactionOrigin,
+                    TransactionDestination = trans.TransactionDestination,
+                    IsValid = trans.IsValid
+                };
+                response.Transaction.Add(item);
             }
             return await Task.FromResult(response);
         }
-        public override async Task<ProtoTransactionDeleteAllStatus> TransactionDeleteAll(Empty request, ServerCallContext context)
+        public override async Task<TransactionDeleteAllResponse> TransactionDeleteAll(Empty request, ServerCallContext context)
         {
             List<Transaction> transactions = await _context.Transaction.ToListAsync();
             int transactionsCount = transactions.Count;
@@ -62,25 +86,42 @@ namespace GRPC
                 }
                 catch { }
             }
-            return new ProtoTransactionDeleteAllStatus
+            return new TransactionDeleteAllResponse
             {
                 Success = status,
                 Deleted = transactionsCount
             };
         }
 
-        public override async Task<ProtoTransactionModel> TransactionFind(ProtoTransactionNumber request, ServerCallContext context)
+        public override async Task<TransactionFindResponse> TransactionFind(TransactionFindParams request, ServerCallContext context)
         {
             var transaction = await _context.Transaction.FindAsync(request.TransactionNumber);
             if (transaction == null)
             {
                 throw new RpcException(new Status(StatusCode.NotFound, "Transaction introuvable"));
             }
-            return await Task.FromResult(Converter.TransactionToProtoTransactionModel(transaction));
+            return new TransactionFindResponse
+            {
+                TransactionNumber = transaction.TransactionNumber,
+                TransactionAmount = transaction.TransactionAmount,
+                TransactionDate = Timestamp.FromDateTime(transaction.TransactionDate),
+                TransactionOrigin = transaction.TransactionOrigin,
+                TransactionDestination = transaction.TransactionDestination,
+                IsValid = transaction.IsValid
+            };
         }
-        public override async Task<ProtoTransactionModel> TransactionUpdate(ProtoTransactionModel request, ServerCallContext context)
+        public override async Task<TransactionUpdateResponse> TransactionUpdate(TransactionUpdateParams request, ServerCallContext context)
         {
-            _context.Entry(Converter.ProtoTransactionModelToTransaction(request)).State = EntityState.Modified;
+            Transaction transaction = new Transaction
+            {
+                TransactionNumber = request.TransactionNumber,
+                TransactionAmount = request.TransactionAmount,
+                TransactionDate = request.TransactionDate.ToDateTime(),
+                TransactionOrigin = request.TransactionOrigin,
+                TransactionDestination = request.TransactionDestination,
+                IsValid = request.IsValid
+            };
+            _context.Entry(transaction).State = EntityState.Modified;
 
             try
             {
@@ -97,9 +138,17 @@ namespace GRPC
                     throw;
                 }
             }
-            return await Task.FromResult(request);
+            return new TransactionUpdateResponse
+            {
+                TransactionNumber = transaction.TransactionNumber,
+                TransactionAmount = transaction.TransactionAmount,
+                TransactionDate = Timestamp.FromDateTime(transaction.TransactionDate),
+                TransactionOrigin = transaction.TransactionOrigin,
+                TransactionDestination = transaction.TransactionDestination,
+                IsValid = transaction.IsValid
+            };
         }
-        public override async Task<ProtoTransactionDeleteStatus> DeleteTransaction(ProtoTransactionNumber request, ServerCallContext context)
+        public override async Task<TransactionDeleteResponse> TransactionDelete(TransactionDeleteParams request, ServerCallContext context)
         {
             bool status = false;
             var transaction = await _context.Transaction.FindAsync(request.TransactionNumber);
@@ -113,7 +162,7 @@ namespace GRPC
                 }
                 catch { }
             }
-            return new ProtoTransactionDeleteStatus
+            return new TransactionDeleteResponse
             {
                 Success = status
             };

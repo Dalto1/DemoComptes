@@ -7,18 +7,18 @@ import "Protos/ProtoTransaction.proto";
 option csharp_namespace = "GRPC";
 
 service ProtoAccount {
-	rpc AccountCreate (ProtoAccountModel) returns (ProtoAccountModel);
-	rpc AccountList (google.protobuf.Empty) returns (ProtoAccountModelList);
-	rpc AccountDeleteAll (google.protobuf.Empty) returns (ProtoAccountDeleteAllStatus);
+	rpc AccountCreate (AccountCreateParams) returns (AccountCreateResponse);
+	rpc AccountList (google.protobuf.Empty) returns (AccountListResponse);
+	rpc AccountDeleteAll (google.protobuf.Empty) returns (AccountDeleteAllResponse);
 	
-	rpc AccountFind (ProtoAccountNumber) returns (ProtoAccountModel);
-	rpc AccountUpdate (ProtoAccountModel) returns (ProtoAccountModel);
-	rpc AccountDelete (ProtoAccountNumber) returns (ProtoAccountDeleteStatus);
+	rpc AccountFind (AccountFindParams) returns (AccountFindResponse);
+	rpc AccountUpdate (AccountUpdateParams) returns (AccountUpdateResponse);
+	rpc AccountDelete (AccountDeleteParams) returns (AccountDeleteResponse);
 	
-	rpc GetTransactionsByAccount (ProtoAccountNumber) returns (ProtoTransactionModelList);
-	rpc DeleteTransactionsByAccount (ProtoAccountNumber) returns (ProtoTransactionDeleteAllStatus);
+	rpc GetTransactionsByAccount (GetTransactionsByAccountParams) returns (TransactionListReponse);
+	rpc DeleteTransactionsByAccount (DeleteTransactionsByAccountParams) returns (TransactionDeleteAllResponse);
 }
-message ProtoAccountModel {
+message AccountCreateParams {
 	int32 AccountNumber = 1;
 	int32 AccountBalance = 2;
     google.protobuf.Timestamp AccountCreationDate = 3;
@@ -26,16 +26,67 @@ message ProtoAccountModel {
 	string AccountHolderLastName = 5;
 	bool IsActive = 6;
 }
-message ProtoAccountModelList {
-	repeated ProtoAccountModel Account = 1;
-}
-message ProtoAccountNumber {
+message AccountCreateResponse {
 	int32 AccountNumber = 1;
+	int32 AccountBalance = 2;
+    google.protobuf.Timestamp AccountCreationDate = 3;
+	string AccountHolderFirstName = 4;
+	string AccountHolderLastName = 5;
+	bool IsActive = 6;
 }
-message ProtoAccountDeleteStatus {
-	bool Success = 1;
+message AccountListItem {
+	int32 AccountNumber = 1;
+	int32 AccountBalance = 2;
+    google.protobuf.Timestamp AccountCreationDate = 3;
+	string AccountHolderFirstName = 4;
+	string AccountHolderLastName = 5;
+	bool IsActive = 6;
 }
-message ProtoAccountDeleteAllStatus {
+message AccountListResponse {
+	repeated AccountListItem Account = 1;
+}
+message AccountDeleteAllResponse {
 	bool Success = 1;
 	int32 Deleted = 2;
+}
+
+message AccountFindParams {
+	int32 AccountNumber = 1;
+}
+message AccountFindResponse {
+	int32 AccountNumber = 1;
+	int32 AccountBalance = 2;
+    google.protobuf.Timestamp AccountCreationDate = 3;
+	string AccountHolderFirstName = 4;
+	string AccountHolderLastName = 5;
+	bool IsActive = 6;
+}
+message AccountUpdateParams {
+	int32 AccountNumber = 1;
+	int32 AccountBalance = 2;
+    google.protobuf.Timestamp AccountCreationDate = 3;
+	string AccountHolderFirstName = 4;
+	string AccountHolderLastName = 5;
+	bool IsActive = 6;
+}
+message AccountUpdateResponse {
+	int32 AccountNumber = 1;
+	int32 AccountBalance = 2;
+    google.protobuf.Timestamp AccountCreationDate = 3;
+	string AccountHolderFirstName = 4;
+	string AccountHolderLastName = 5;
+	bool IsActive = 6;
+}
+message AccountDeleteParams {
+	int32 AccountNumber = 1;
+}
+message AccountDeleteResponse {
+	bool Success = 1;
+}
+
+message GetTransactionsByAccountParams {
+	int32 AccountNumber = 1;
+}
+message DeleteTransactionsByAccountParams {
+	int32 AccountNumber = 1;
 }

@@ -6,15 +6,15 @@ import "google/protobuf/empty.proto";
 option csharp_namespace = "GRPC";
 
 service ProtoTransaction {
-	rpc TransactionCreate (ProtoTransactionModel) returns (ProtoTransactionModel);
-	rpc TransactionList (google.protobuf.Empty) returns (ProtoTransactionModelList);
-	rpc TransactionDeleteAll (google.protobuf.Empty) returns (ProtoTransactionDeleteAllStatus);
+	rpc TransactionCreate (TransactionCreateParams) returns (TransactionCreateResponse);
+	rpc TransactionList (google.protobuf.Empty) returns (TransactionListReponse);
+	rpc TransactionDeleteAll (google.protobuf.Empty) returns (TransactionDeleteAllResponse);
 
-	rpc TransactionFind (ProtoTransactionNumber) returns (ProtoTransactionModel);
-	rpc TransactionUpdate (ProtoTransactionModel) returns (ProtoTransactionModel);
-	rpc DeleteTransaction (ProtoTransactionNumber) returns (ProtoTransactionDeleteStatus);
+	rpc TransactionFind (TransactionFindParams) returns (TransactionFindResponse);
+	rpc TransactionUpdate (TransactionUpdateParams) returns (TransactionUpdateResponse);
+	rpc TransactionDelete (TransactionDeleteParams) returns (TransactionDeleteResponse);
 }
-message ProtoTransactionModel {
+message TransactionCreateParams {
 	int32 TransactionNumber = 1;
 	int32 TransactionAmount = 2;
     google.protobuf.Timestamp TransactionDate = 3;
@@ -22,16 +22,60 @@ message ProtoTransactionModel {
 	int32 TransactionDestination = 5;
 	bool isValid = 6;
 }
-message ProtoTransactionModelList {
-	repeated ProtoTransactionModel Transaction = 1;
-}
-message ProtoTransactionNumber {
+message TransactionCreateResponse {
 	int32 TransactionNumber = 1;
+	int32 TransactionAmount = 2;
+    google.protobuf.Timestamp TransactionDate = 3;
+	int32 TransactionOrigin = 4;
+	int32 TransactionDestination = 5;
+	bool isValid = 6;
 }
-message ProtoTransactionDeleteStatus {
-	bool Success = 1;
+message TransactionListItem {
+	int32 TransactionNumber = 1;
+	int32 TransactionAmount = 2;
+    google.protobuf.Timestamp TransactionDate = 3;
+	int32 TransactionOrigin = 4;
+	int32 TransactionDestination = 5;
+	bool isValid = 6;
 }
-message ProtoTransactionDeleteAllStatus {
+message TransactionListReponse {
+	repeated TransactionListItem Transaction = 1;
+}
+message TransactionDeleteAllResponse {
 	bool Success = 1;
 	int32 Deleted = 2;
+}
+
+message TransactionFindParams {
+	int32 TransactionNumber = 1;
+}
+message TransactionFindResponse {
+	int32 TransactionNumber = 1;
+	int32 TransactionAmount = 2;
+    google.protobuf.Timestamp TransactionDate = 3;
+	int32 TransactionOrigin = 4;
+	int32 TransactionDestination = 5;
+	bool isValid = 6;
+}
+message TransactionUpdateParams {
+	int32 TransactionNumber = 1;
+	int32 TransactionAmount = 2;
+    google.protobuf.Timestamp TransactionDate = 3;
+	int32 TransactionOrigin = 4;
+	int32 TransactionDestination = 5;
+	bool isValid = 6;
+}
+message TransactionUpdateResponse {
+	int32 TransactionNumber = 1;
+	int32 TransactionAmount = 2;
+    google.protobuf.Timestamp TransactionDate = 3;
+	int32 TransactionOrigin = 4;
+	int32 TransactionDestination = 5;
+	bool isValid = 6;
+}
+message TransactionDeleteParams {
+	int32 TransactionNumber = 1;
+}
+message TransactionDeleteResponse {
+	bool Success = 1;
 }
