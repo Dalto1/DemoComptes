@@ -32,8 +32,8 @@ namespace REST
             {
                 context.UseInMemoryDatabase("DB_REST");
             });
-            //services.AddTransient<IAccountsRepository, AccountsRepository>();
-            //services.AddTransient<ITransactionsRepository, TransactionsRepository>();
+            services.AddScoped<IAccountsRepository, AccountsRepository>();
+            services.AddScoped<ITransactionsRepository, TransactionsRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -51,7 +51,7 @@ namespace REST
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapDefaultControllerRoute();
             });
         }
     }
