@@ -32,9 +32,8 @@ namespace REST
             {
                 context.UseInMemoryDatabase("DB_REST");
             });
-
-            services.AddTransient<IAccountsRepository, AccountsRepository>();
-            services.AddTransient<ITransactionsRepository, TransactionsRepository>();
+            //services.AddTransient<IAccountsRepository, AccountsRepository>();
+            //services.AddTransient<ITransactionsRepository, TransactionsRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
