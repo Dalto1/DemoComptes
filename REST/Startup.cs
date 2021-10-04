@@ -5,6 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Domain.Data;
+using Domain.Repositories.Accounts;
+using Domain.Repositories.Transactions;
 
 namespace REST
 {
@@ -30,6 +32,9 @@ namespace REST
             {
                 context.UseInMemoryDatabase("DB_REST");
             });
+
+            services.AddTransient<IAccountsRepository, AccountsRepository>();
+            services.AddTransient<ITransactionsRepository, TransactionsRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

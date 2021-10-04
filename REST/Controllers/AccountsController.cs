@@ -3,6 +3,7 @@ using Domain.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Domain.Repositories.Accounts;
+using Domain.Data;
 
 namespace REST.Controllers
 {
@@ -11,16 +12,19 @@ namespace REST.Controllers
     public class AccountsController : ControllerBase
     {
         private readonly IAccountsRepository _AccountsRepository;
-        public AccountsController(AccountsRepository accountRepository)
+        
+        public AccountsController(IAccountsRepository accountRepository)
         {
             _AccountsRepository = accountRepository;
         }
+        /*private readonly DemoComptesContext _context;
+        IAccountsRepository _AccountsRepository = new AccountsRepository(_context);*/
 
         [HttpPost]
         public async Task<ActionResult<AccountModel>> AccountCreate(AccountModel account)
         {
             AccountModel result = await _AccountsRepository.AccountCreate(account);
-            if (result!=null) return CreatedAtAction("AccountCreated", new { id = account.AccountNumber }, account);
+            if (result!=null) return CreatedAtAction("Account Created", new { id = result.AccountNumber }, result);
             else return NoContent();
         }
         [HttpGet]

@@ -3,6 +3,7 @@ using Domain.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Domain.Repositories.Transactions;
+using Domain.Data;
 
 namespace REST.Controllers
 {
@@ -11,16 +12,18 @@ namespace REST.Controllers
     public class TransactionsController : ControllerBase
     {
         private readonly ITransactionsRepository _TransactionsRepository;
-        public TransactionsController(TransactionsRepository transactionRepository)
+        public TransactionsController(ITransactionsRepository transactionRepository)
         {
             _TransactionsRepository = transactionRepository;
         }
+        /*private readonly DemoComptesContext _context;
+        ITransactionsRepository _TransactionsRepository = new TransactionsRepository(_context);*/
 
         [HttpPost]
         public async Task<ActionResult<TransactionModel>> TransactionCreate(TransactionModel transaction)
         {
             TransactionModel result = await _TransactionsRepository.TransactionCreate(transaction);
-            if (result != null) return CreatedAtAction("TransactionCreated", new { id = transaction.TransactionNumber }, transaction);
+            if (result != null) return CreatedAtAction("Transaction Created", new { id = result.TransactionNumber }, result);
             else return NoContent();
         }
         [HttpGet]
