@@ -7,7 +7,7 @@ namespace Domain.Data
     {
         public DemoComptesContext(DbContextOptions<DemoComptesContext> options) : base(options) { }
 
-        public DbSet<Account> Account { get; set; }
-        public DbSet<Transaction> Transaction { get; set; }
+        public DbSet<AccountModel> Account { get; set; }
+        public DbSet<TransactionModel> Transaction { get; set; }
     }
 }
