@@ -4,9 +4,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Domain.Data;
-using Domain.Repositories.Accounts;
-using Domain.Repositories.Transactions;
+using DataAccessLayer.Data;
+using DataAccessLayer.Repositories;
+using Domain.Interfaces;
 
 namespace REST
 {
@@ -25,6 +25,7 @@ namespace REST
             services.AddDbContext<DemoComptesContext>(context => { context.UseInMemoryDatabase("DB_REST"); });
             services.AddScoped<IAccountsRepository, AccountsRepository>();
             services.AddScoped<ITransactionsRepository, TransactionsRepository>();
+            //TODO serviceCollection
             /*services.AddControllers().AddJsonOptions(options => { options.JsonSerializerOptions.IgnoreNullValues = true; options.JsonSerializerOptions.WriteIndented = true; });
             var serviceCollection = new ServiceCollection()
                 .AddDbContext<DemoComptesContext>(context => { context.UseInMemoryDatabase("DB_REST"); })

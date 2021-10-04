@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Domain.Models;
 
-namespace Domain.Data
+namespace DataAccessLayer.Data
 {
     public class DemoComptesContext : DbContext
     {

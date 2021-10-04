@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Domain.Repositories.Accounts
+namespace Domain.Interfaces
 {
     public interface IAccountsRepository
     {

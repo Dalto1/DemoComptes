@@ -1,12 +1,13 @@
-﻿using Domain.Data;
-using Domain.Models;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using DataAccessLayer.Data;
+using Domain.Models;
+using Domain.Interfaces;
 
-namespace Domain.Repositories.Accounts
+namespace DataAccessLayer.Repositories
 {
     public class AccountsRepository : IAccountsRepository
     {

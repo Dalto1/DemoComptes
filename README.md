@@ -9,7 +9,9 @@ Projet personnel simulant des comptes et des opérations diverses.
 Voir le [Wiki](../../wiki/Accueil) pour plus d'informations
 
 ## Fonctionalités partielles et futures
-* Tests unitaires
+* Tests unitaires (MOQ, XUNIT)
+* Tests intégrés (Postman)
+* serviceCollection (Rest)
 
 ## License
 

@@ -2,8 +2,7 @@
 using Domain.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Domain.Repositories.Transactions;
-using Domain.Data;
+using Domain.Interfaces;
 
 namespace REST.Controllers
 {
