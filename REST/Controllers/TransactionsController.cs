@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Domain.Data;
+﻿using Microsoft.AspNetCore.Mvc;
 using Domain.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Domain.Interfaces;
 
 namespace REST.Controllers
 {
@@ -12,95 +10,53 @@ namespace REST.Controllers
     [ApiController]
     public class TransactionsController : ControllerBase
     {
-        private readonly DemoComptesContext _context;
-        public TransactionsController(DemoComptesContext context)
+        private readonly ITransactionsRepository _TransactionsRepository;
+        public TransactionsController(ITransactionsRepository transactionRepository)
         {
-            _context = context;
+            _TransactionsRepository = transactionRepository;
         }
 
         [HttpPost]
-        public async Task<ActionResult<Transaction>> TransactionCreate(Transaction transaction)
+        public async Task<ActionResult<TransactionModel>> TransactionCreate(TransactionModel transaction)
         {
-            
-            Account compteOrigine = await _context.Account.FindAsync(transaction.TransactionOrigin);
-            Account compteDestination = await _context.Account.FindAsync(transaction.TransactionDestination);
-            if (transaction.TransactionAmount < 0)
-            {
-                transaction.IsValid = false;
-            }
-            else
-            {
-                if (compteOrigine != null) compteOrigine.AccountBalance -= transaction.TransactionAmount;
-                if (compteDestination != null) compteDestination.AccountBalance += transaction.TransactionAmount;
-                _context.Transaction.Add(transaction);
-                await _context.SaveChangesAsync();
-            }
-
-            return CreatedAtAction("TransactionFind", new { id = transaction.TransactionNumber }, transaction);
+            TransactionModel result = await _TransactionsRepository.TransactionCreate(transaction);
+            if (result == null) return NoContent();
+            return CreatedAtAction("Transaction Created", new { id = result.TransactionNumber }, result);
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Transaction>>> TransactionList()
+        public async Task<ActionResult<IEnumerable<TransactionModel>>> TransactionList()
         {
-            return await _context.Transaction.ToListAsync();
+            IEnumerable<TransactionModel> result = await _TransactionsRepository.TransactionList();
+            if (result == null) return NoContent();
+            return Ok(result);
         }
         [HttpDelete]
         public async Task<IActionResult> TransactionDeleteAll()
         {
-            _context.Transaction.RemoveRange(_context.Transaction);
-            await _context.SaveChangesAsync();
+            bool result = await _TransactionsRepository.TransactionDeleteAll();
+            if (!result) return NotFound();
             return NoContent();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Transaction>> TransactionFind(int id)
+        public async Task<ActionResult<TransactionModel>> TransactionFind(int id)
         {
-            var transaction = await _context.Transaction.FindAsync(id);
-
-            if (transaction == null)
-            {
-                return NotFound();
-            }
-
-            return transaction;
+            TransactionModel result = await _TransactionsRepository.TransactionFind(id);
+            if (result == null) return NotFound();
+            return Ok(result);
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> TransactionUpdate(int id, Transaction transaction)
+        public async Task<IActionResult> TransactionUpdate(int id, TransactionModel transaction)
         {
-            if (id != transaction.TransactionNumber)
-            {
-                return BadRequest();
-            }
-            _context.Entry(transaction).State = EntityState.Modified;
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TransactionExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            TransactionModel result = await _TransactionsRepository.TransactionUpdate(id, transaction);
+            if (result == null) return NotFound();
+            return Ok(result);
         }
         [HttpDelete("{id}")]
         public async Task<IActionResult> TransactionDelete(int id)
         {
-            var transaction = await _context.Transaction.FindAsync(id);
-            if (transaction == null)
-            {
-                return NotFound();
-            }
-
-            _context.Transaction.Remove(transaction);
-            await _context.SaveChangesAsync();
-
+            bool result = await _TransactionsRepository.TransactionDelete(id);
+            if (!result) return NotFound();
             return NoContent();
         }
 
@@ -109,10 +65,6 @@ namespace REST.Controllers
         public BadRequestResult Error()
         {
             return BadRequest();
-        }
-        private bool TransactionExists(int id)
-        {
-            return _context.Transaction.Any(e => e.TransactionNumber == id);
         }
     }
 }

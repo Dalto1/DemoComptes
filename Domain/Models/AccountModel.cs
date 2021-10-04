@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Models
 {
-    public class Account
+    public class AccountModel
     {
         [Key]
         public int AccountNumber { get; set; }
@@ -17,7 +17,7 @@ namespace Domain.Models
         public string AccountHolderLastName { get; set; }
         [Required]
         public bool IsActive { get; set; }
-        public Account()
+        public AccountModel()
         {
             AccountBalance = 0;
             AccountCreationDate = DateTime.Now;

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Models
 {
-    public class Transaction
+    public class TransactionModel
     {
         [Key]
         public int TransactionNumber { get; set; }
@@ -17,7 +17,7 @@ namespace Domain.Models
         public int TransactionDestination { get; set; }
         [Required]
         public bool IsValid { get; set; }
-        public Transaction()
+        public TransactionModel()
         {
             TransactionDate = DateTime.Now;
         }

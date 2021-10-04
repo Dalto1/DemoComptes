@@ -1,6 +1,6 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
-using Domain.Data;
+using DataAccessLayer.Data;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -18,7 +18,7 @@ namespace GRPC
         }
         public override async Task<AccountCreateResponse> AccountCreate(AccountCreateParams request, ServerCallContext context)
         {
-            Account account = new Account
+            AccountModel account = new AccountModel
             {
                 AccountNumber = request.AccountNumber,
                 AccountBalance = request.AccountBalance,
@@ -42,7 +42,7 @@ namespace GRPC
         }
         public override async Task<AccountListResponse> AccountList(Empty request, ServerCallContext context)
         {
-            List<Account> accounts = await _context.Account.ToListAsync();
+            List<AccountModel> accounts = await _context.Account.ToListAsync();
             AccountListResponse response = new AccountListResponse();
             foreach (var acc in accounts)
             {
@@ -61,7 +61,7 @@ namespace GRPC
         }
         public override async Task<AccountDeleteAllResponse> AccountDeleteAll(Empty request, ServerCallContext context)
         {
-            List<Account> accounts = await _context.Account.ToListAsync();
+            List<AccountModel> accounts = await _context.Account.ToListAsync();
             int accountsCount = accounts.Count;
             bool status = false;
             if (accountsCount > 0)
@@ -101,7 +101,7 @@ namespace GRPC
         }
         public override async Task<AccountUpdateResponse> AccountUpdate(AccountUpdateParams request, ServerCallContext context)
         {
-            Account account = new Account
+            AccountModel account = new AccountModel
             {
                 AccountNumber = request.AccountNumber,
                 AccountBalance = request.AccountBalance,
@@ -159,7 +159,7 @@ namespace GRPC
 
         public override async Task<TransactionListReponse> GetTransactionsByAccount(GetTransactionsByAccountParams request, ServerCallContext context)
         {
-            List<Transaction> transactions = await _context.Transaction.Where(s => (s.TransactionOrigin.Equals(request.AccountNumber) || s.TransactionDestination.Equals(request.AccountNumber))).ToListAsync();
+            List<TransactionModel> transactions = await _context.Transaction.Where(s => (s.TransactionOrigin.Equals(request.AccountNumber) || s.TransactionDestination.Equals(request.AccountNumber))).ToListAsync();
 
             TransactionListReponse response = new TransactionListReponse();
             foreach (var trans in transactions)
@@ -179,7 +179,7 @@ namespace GRPC
         }
         public override async Task<TransactionDeleteAllResponse> DeleteTransactionsByAccount(DeleteTransactionsByAccountParams request, ServerCallContext context)
         {
-            List<Transaction> transactions = await _context.Transaction.Where(s => (s.TransactionOrigin.Equals(request.AccountNumber) || s.TransactionDestination.Equals(request.AccountNumber))).ToListAsync();
+            List<TransactionModel> transactions = await _context.Transaction.Where(s => (s.TransactionOrigin.Equals(request.AccountNumber) || s.TransactionDestination.Equals(request.AccountNumber))).ToListAsync();
             int transactionsCount = transactions.Count;
             bool status = false;
             if (transactionsCount > 0)

@@ -4,7 +4,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Domain.Data;
+using DataAccessLayer.Data;
+using DataAccessLayer.Repositories;
+using Domain.Interfaces;
 
 namespace REST
 {
@@ -19,17 +21,17 @@ namespace REST
 
         public void ConfigureServices(IServiceCollection services)
         {
-
-            services.AddControllers()
-                .AddJsonOptions(options =>
-                {
-                    options.JsonSerializerOptions.IgnoreNullValues = true;
-                    options.JsonSerializerOptions.WriteIndented = true;
-                });            
-            services.AddDbContext<DemoComptesContext>(context =>
-            {
-                context.UseInMemoryDatabase("DB_REST");
-            });
+            services.AddControllers().AddJsonOptions(options => { options.JsonSerializerOptions.IgnoreNullValues = true; options.JsonSerializerOptions.WriteIndented = true; });            
+            services.AddDbContext<DemoComptesContext>(context => { context.UseInMemoryDatabase("DB_REST"); });
+            services.AddScoped<IAccountsRepository, AccountsRepository>();
+            services.AddScoped<ITransactionsRepository, TransactionsRepository>();
+            //TODO serviceCollection
+            /*services.AddControllers().AddJsonOptions(options => { options.JsonSerializerOptions.IgnoreNullValues = true; options.JsonSerializerOptions.WriteIndented = true; });
+            var serviceCollection = new ServiceCollection()
+                .AddDbContext<DemoComptesContext>(context => { context.UseInMemoryDatabase("DB_REST"); })
+                .AddScoped<IAccountsRepository, AccountsRepository>()
+                .AddScoped<ITransactionsRepository, TransactionsRepository>();
+                .BuildServiceProvider();*/
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -47,7 +49,7 @@ namespace REST
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapDefaultControllerRoute();
             });
         }
     }

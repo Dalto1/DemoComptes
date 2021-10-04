@@ -19,7 +19,7 @@ namespace GRPC
 
         public override async Task<TransactionCreateResponse> TransactionCreate(TransactionCreateParams request, ServerCallContext context)
         {
-            Transaction transaction = new Transaction
+            TransactionModel transaction = new TransactionModel
             {
                 TransactionNumber = request.TransactionNumber,
                 TransactionAmount = request.TransactionAmount,
@@ -28,8 +28,8 @@ namespace GRPC
                 TransactionDestination = request.TransactionDestination,
                 IsValid = request.IsValid
             };
-            Account compteOrigine = await _context.Account.FindAsync(transaction.TransactionOrigin);
-            Account compteDestination = await _context.Account.FindAsync(transaction.TransactionDestination);
+            AccountModel compteOrigine = await _context.Account.FindAsync(transaction.TransactionOrigin);
+            AccountModel compteDestination = await _context.Account.FindAsync(transaction.TransactionDestination);
             if (transaction.TransactionAmount < 0)
             {
                 transaction.IsValid = false;
@@ -54,7 +54,7 @@ namespace GRPC
         }
         public override async Task<TransactionListReponse> TransactionList(Empty request, ServerCallContext context)
         {
-            List<Transaction> transactions = await _context.Transaction.ToListAsync();
+            List<TransactionModel> transactions = await _context.Transaction.ToListAsync();
             TransactionListReponse response = new TransactionListReponse();
             foreach (var trans in transactions)
             {
@@ -73,7 +73,7 @@ namespace GRPC
         }
         public override async Task<TransactionDeleteAllResponse> TransactionDeleteAll(Empty request, ServerCallContext context)
         {
-            List<Transaction> transactions = await _context.Transaction.ToListAsync();
+            List<TransactionModel> transactions = await _context.Transaction.ToListAsync();
             int transactionsCount = transactions.Count;
             bool status = false;
             if (transactionsCount > 0)
@@ -112,7 +112,7 @@ namespace GRPC
         }
         public override async Task<TransactionUpdateResponse> TransactionUpdate(TransactionUpdateParams request, ServerCallContext context)
         {
-            Transaction transaction = new Transaction
+            TransactionModel transaction = new TransactionModel
             {
                 TransactionNumber = request.TransactionNumber,
                 TransactionAmount = request.TransactionAmount,

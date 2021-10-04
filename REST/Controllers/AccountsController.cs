@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Domain.Data;
 using Domain.Models;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using Domain.Interfaces;
 
 namespace REST.Controllers
 {
@@ -12,98 +10,69 @@ namespace REST.Controllers
     [ApiController]
     public class AccountsController : ControllerBase
     {
-        private readonly DemoComptesContext _context;
-        public AccountsController(DemoComptesContext context)
+        private readonly IAccountsRepository _AccountsRepository;
+        
+        public AccountsController(IAccountsRepository accountRepository)
         {
-            _context = context;
+            _AccountsRepository = accountRepository;
         }
 
         [HttpPost]
-        public async Task<ActionResult<Account>> AccountCreate(Account account)
+        public async Task<ActionResult<AccountModel>> AccountCreate(AccountModel account)
         {
-            _context.Account.Add(account);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("AccountFind", new { id = account.AccountNumber }, account);
+            AccountModel result = await _AccountsRepository.AccountCreate(account);
+            if (result == null) return NoContent();
+            return CreatedAtAction("Account Created", new { id = result.AccountNumber }, result);
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Account>>> AccountList()
+        public async Task<ActionResult<IEnumerable<AccountModel>>> AccountList()
         {
-            return await _context.Account.ToListAsync();
+            IEnumerable<AccountModel> result = await _AccountsRepository.AccountList();
+            if (result == null) return NoContent();
+            return Ok(result);
         }
         [HttpDelete]
         public async Task<IActionResult> AccountDeleteAll()
         {
-            _context.Account.RemoveRange(_context.Account);
-            await _context.SaveChangesAsync();
+            bool result = await _AccountsRepository.AccountDeleteAll();
+            if (!result) return NotFound();
             return NoContent();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Account>> AccountFind(int id)
+        public async Task<ActionResult<AccountModel>> AccountFind(int id)
         {
-            var account = await _context.Account.FindAsync(id);
-
-            if (account == null)
-            {
-                return NotFound();
-            }
-
-            return account;
+            AccountModel result = await _AccountsRepository.AccountFind(id);
+            if (result == null) return NotFound();
+            return Ok(result);
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> AccountUpdate(int id, Account account)
+        public async Task<IActionResult> AccountUpdate(int id, AccountModel account)
         {
-            if (id != account.AccountNumber)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(account).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!AccountExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            AccountModel result = await _AccountsRepository.AccountUpdate(id, account);
+            if (result == null) return NotFound();
+            return Ok(result);
         }
         [HttpDelete("{id}")]
-        public async Task<IActionResult> AccountDelete(int id)
+        public async Task<IActionResult> AccountDelete(int id) 
         {
-            var account = await _context.Account.FindAsync(id);
-            if (account == null)
-            {
-                return NotFound();
-            }
-
-            _context.Account.Remove(account);
-            await _context.SaveChangesAsync();
-
+            bool result = await _AccountsRepository.AccountDelete(id);
+            if (!result) return NotFound();
             return NoContent();
         }
 
         [HttpGet("{id}/transactions")]
-        public async Task<ActionResult<IEnumerable<Transaction>>> GetTransactionsByAccount(int id)
+        public async Task<ActionResult<IEnumerable<TransactionModel>>> GetTransactionsByAccount(int id)
         {
-            return await _context.Transaction.Where(s => (s.TransactionOrigin.Equals(id) || s.TransactionDestination.Equals(id))).ToListAsync();
+            IEnumerable<TransactionModel> result = await _AccountsRepository.GetTransactionsByAccount(id);
+            if (result == null) return NotFound();
+            return Ok(result);
         }
         [HttpDelete("{id}/transactions")]
         public async Task<IActionResult> DeleteTransactionsByAccount(int id)
         {
-            _context.Transaction.RemoveRange(_context.Transaction.Where(s => (s.TransactionOrigin.Equals(id) || s.TransactionDestination.Equals(id))));
-            await _context.SaveChangesAsync();
+            bool result = await _AccountsRepository.DeleteTransactionsByAccount(id);
+            if (!result) return NotFound();
             return NoContent();
         }
 
@@ -116,10 +85,6 @@ namespace REST.Controllers
         public BadRequestResult Error()
         {
             return BadRequest();
-        }
-        private bool AccountExists(int id)
-        {
-            return _context.Account.Any(e => e.AccountNumber == id);
         }
     }
 }
