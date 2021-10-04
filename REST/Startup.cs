@@ -21,19 +21,16 @@ namespace REST
 
         public void ConfigureServices(IServiceCollection services)
         {
-
-            services.AddControllers()
-                .AddJsonOptions(options =>
-                {
-                    options.JsonSerializerOptions.IgnoreNullValues = true;
-                    options.JsonSerializerOptions.WriteIndented = true;
-                });            
-            services.AddDbContext<DemoComptesContext>(context =>
-            {
-                context.UseInMemoryDatabase("DB_REST");
-            });
+            services.AddControllers().AddJsonOptions(options => { options.JsonSerializerOptions.IgnoreNullValues = true; options.JsonSerializerOptions.WriteIndented = true; });            
+            services.AddDbContext<DemoComptesContext>(context => { context.UseInMemoryDatabase("DB_REST"); });
             services.AddScoped<IAccountsRepository, AccountsRepository>();
             services.AddScoped<ITransactionsRepository, TransactionsRepository>();
+            /*services.AddControllers().AddJsonOptions(options => { options.JsonSerializerOptions.IgnoreNullValues = true; options.JsonSerializerOptions.WriteIndented = true; });
+            var serviceCollection = new ServiceCollection()
+                .AddDbContext<DemoComptesContext>(context => { context.UseInMemoryDatabase("DB_REST"); })
+                .AddScoped<IAccountsRepository, AccountsRepository>()
+                .AddScoped<ITransactionsRepository, TransactionsRepository>();
+                .BuildServiceProvider();*/
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
