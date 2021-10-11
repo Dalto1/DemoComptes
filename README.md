@@ -9,10 +9,10 @@ Projet personnel simulant des comptes et des opérations diverses.
 Voir le [Wiki](../../wiki/Accueil) pour plus d'informations
 
 ## Fonctionalités partielles et futures
-* Tests unitaires (MOQ, XUNIT)
+* Vérifier GRPC
 * Tests intégrés (Postman)
 * serviceCollection (Rest)
-* Vérifier GRPC
+* Ajouter des tests unitaires (Rest)
 
 ## License
 
