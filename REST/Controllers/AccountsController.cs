@@ -22,7 +22,7 @@ namespace REST.Controllers
         {
             AccountModel result = await _AccountsRepository.AccountCreate(account);
             if (result == null) return NoContent();
-            return CreatedAtAction("Account Created", new { id = result.AccountNumber }, result);
+            return CreatedAtAction("AccountFind", new { id = result.AccountNumber }, result);
         }
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AccountModel>>> AccountList()

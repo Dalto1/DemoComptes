@@ -21,7 +21,7 @@ namespace REST.Controllers
         {
             TransactionModel result = await _TransactionsRepository.TransactionCreate(transaction);
             if (result == null) return NoContent();
-            return CreatedAtAction("Transaction Created", new { id = result.TransactionNumber }, result);
+            return CreatedAtAction("TransactionFind", new { id = result.TransactionNumber }, result);
         }
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TransactionModel>>> TransactionList()
