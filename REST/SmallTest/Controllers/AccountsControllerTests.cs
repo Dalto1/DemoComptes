@@ -1,5 +1,4 @@
-using DataAccessLayer.Repositories;
-using Domain.Interfaces;
+﻿using Domain.Interfaces;
 using Domain.Models;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
@@ -9,11 +8,10 @@ using System;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Tests
+namespace REST.SmallTest.Controllers
 {
-    public class TestAccountsController
+    public class AccountsControllerTests
     {
-
         [Fact]
         public async Task FindAccount_ActionResult_ReturnsNotFoundResultForNonExistentAccounts()
         {
@@ -53,6 +51,8 @@ namespace Tests
             Assert.NotNull(response);
             Assert.IsType<AccountModel>(response);
             a.Should().BeEquivalentTo(response);
+
+            mockAccountRepository.Verify(v => v.AccountCreate(a));
         }
 
         /*[Fact]
@@ -64,7 +64,7 @@ namespace Tests
             controller.ModelState.AddModelError("error", "some error");
 
             // Act
-            var result = await controller.AccountCreate(AccountModel: null);
+            var result = await controller.AccountCreate(null);
 
             // Assert
             Assert.IsType<BadRequestObjectResult>(result);
