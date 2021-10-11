@@ -12,6 +12,7 @@ Voir le [Wiki](../../wiki/Accueil) pour plus d'informations
 * Tests unitaires (MOQ, XUNIT)
 * Tests intégrés (Postman)
 * serviceCollection (Rest)
+* Vérifier GRPC
 
 ## License
 
