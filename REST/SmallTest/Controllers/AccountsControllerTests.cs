@@ -12,65 +12,61 @@ namespace REST.SmallTest.Controllers
 {
     public class AccountsControllerTests
     {
-        [Fact]
-        public async Task GivenFindAccount_WhenAccountFindANonExistentAccountId_ThenResponseIsTypeNotFoundResult()
+        private readonly int aNonExistentAccountId = 999;
+        private readonly AccountModel accountA = new()
         {
-            //Arrange
+            AccountNumber = 1,
+            AccountBalance = 99,
+            AccountCreationDate = DateTime.Now,
+            AccountHolderFirstName = "Paul",
+            AccountHolderLastName = "Houde",
+            IsActive = true
+        }; 
+        private AccountsController CreateAccountsController()
+        {
             Mock<IAccountsRepository> mockAccountRepository = new();
-            AccountsController controller = new(mockAccountRepository.Object);
-            int nonExistentAccountId = 999;
-
-            //Act
-            var sut = await controller.AccountFind(nonExistentAccountId);
-
-            //Assert
-            Assert.IsType<NotFoundResult>(sut?.Result);
+            return new AccountsController(mockAccountRepository.Object);
         }
+
         [Fact]
         public void GivenCreateAccount_WhenCreateAccountVaild_ThenResponseIsValidResult()
         {
             //Arrange
-            AccountModel a = new()
-            {
-                AccountNumber = 1,
-                AccountBalance = 99,
-                AccountCreationDate = DateTime.Now,
-                AccountHolderFirstName = "Paul",
-                AccountHolderLastName = "Houde",
-                IsActive = true
-            };
             Mock<IAccountsRepository> mockAccountRepository = new();
-            mockAccountRepository.Setup(m => m.AccountCreate(a)).ReturnsAsync(a);
+            mockAccountRepository.Setup(m => m.AccountCreate(accountA)).ReturnsAsync(accountA);
 
             //Act
-            var sut = mockAccountRepository.Object.AccountCreate(a);
+            var sut = mockAccountRepository.Object.AccountCreate(accountA);
 
             //Assert
             Assert.IsType<AccountModel>(sut?.Result);
-            mockAccountRepository.Verify(v => v.AccountCreate(a));
+            mockAccountRepository.Verify(v => v.AccountCreate(accountA));
         }
         [Fact]
         public void GivenCreateAccount_WhenCreateAccountVaild_ThenResponseIsCorrectModel()
         {
             //Arrange
-            AccountModel a = new()
-            {
-                AccountNumber = 1,
-                AccountBalance = 99,
-                AccountCreationDate = DateTime.Now,
-                AccountHolderFirstName = "Paul",
-                AccountHolderLastName = "Houde",
-                IsActive = true
-            };
             Mock<IAccountsRepository> mockAccountRepository = new();
-            mockAccountRepository.Setup(m => m.AccountCreate(a)).ReturnsAsync(a);
+            mockAccountRepository.Setup(m => m.AccountCreate(accountA)).ReturnsAsync(accountA);
 
             //Act
-            var sut = mockAccountRepository.Object.AccountCreate(a).Result;
+            var sut = mockAccountRepository.Object.AccountCreate(accountA).Result;
 
             //Assert
-            a.Should().BeEquivalentTo(sut);
-            mockAccountRepository.Verify(v => v.AccountCreate(a));
+            accountA.Should().BeEquivalentTo(sut);
+            mockAccountRepository.Verify(v => v.AccountCreate(accountA));
+        }
+        [Fact]
+        public async void GivenNewAccountController_WhenAccountFindANonExistentAccountId_ThenResponseIsTypeNotFoundResult()
+        {
+            //Arrange
+            var sut = this.CreateAccountsController();
+
+            //Act
+            ActionResult<AccountModel> response = await sut.AccountFind(aNonExistentAccountId);
+
+            //Assert
+            Assert.IsType<NotFoundResult>(response?.Result);
         }
     }
 }
