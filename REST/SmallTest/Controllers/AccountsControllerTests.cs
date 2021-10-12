@@ -33,7 +33,7 @@ namespace REST.SmallTest.Controllers
         {
             //Arrange
             Mock<IAccountsRepository> mockAccountRepository = new();
-            mockAccountRepository.Setup(m => m.Create(accountA)).ReturnsAsync(accountA);
+            mockAccountRepository.Setup(m => m.Create(It.IsAny<AccountModel>())).ReturnsAsync(accountA);
             AccountsController sut = this.CreateAccountsController(mockAccountRepository.Object);
 
             //Act
@@ -48,7 +48,7 @@ namespace REST.SmallTest.Controllers
         {
             //Arrange
             Mock<IAccountsRepository> mockAccountRepository = new();
-            mockAccountRepository.Setup(m => m.Create(accountA)).ReturnsAsync(accountA);
+            mockAccountRepository.Setup(m => m.Create(It.IsAny<AccountModel>())).ReturnsAsync(accountA);
             AccountsController sut = this.CreateAccountsController(mockAccountRepository.Object);
 
             //Act
