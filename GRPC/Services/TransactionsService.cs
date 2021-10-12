@@ -1,35 +1,35 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Domain.Models;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using DataAccessLayer.Data;
+using Domain.Interfaces;
 
 namespace GRPC
 {
     public class TransactionsService : ProtoTransaction.ProtoTransactionBase
     {
-        private readonly DemoComptesContext _context;
-        public TransactionsService(DemoComptesContext context)
+        private readonly IAccountsRepository _AccountsRepository;
+        private readonly ITransactionsRepository _TransactionsRepository;
+        public TransactionsService(IAccountsRepository accountsRepository, ITransactionsRepository transactionsRepository)
         {
-            _context = context;
+            _AccountsRepository = accountsRepository;
+            _TransactionsRepository = transactionsRepository;
         }
 
         public override async Task<TransactionCreateResponse> TransactionCreate(TransactionCreateParams request, ServerCallContext context)
         {
-            TransactionModel transaction = new TransactionModel
+            TransactionModel transaction = new()
             {
-                TransactionId = request.TransactionNumber,
+                TransactionId = request.TransactionId,
                 TransactionAmount = request.TransactionAmount,
                 TransactionDate = request.TransactionDate.ToDateTime(),
                 TransactionOrigin = request.TransactionOrigin,
                 TransactionDestination = request.TransactionDestination,
                 IsValid = request.IsValid
             };
-            AccountModel compteOrigine = await _context.Accounts.FindAsync(transaction.TransactionOrigin);
-            AccountModel compteDestination = await _context.Accounts.FindAsync(transaction.TransactionDestination);
+            AccountModel compteOrigine = await _AccountsRepository.FindByAccountId(transaction.TransactionOrigin);
+            AccountModel compteDestination = await _AccountsRepository.FindByAccountId(transaction.TransactionDestination);
             if (transaction.TransactionAmount < 0)
             {
                 transaction.IsValid = false;
@@ -38,13 +38,11 @@ namespace GRPC
             {
                 if (compteOrigine != null) compteOrigine.AccountBalance -= transaction.TransactionAmount;
                 if (compteDestination != null) compteDestination.AccountBalance += transaction.TransactionAmount;
-                _context.Transactions.Add(transaction);
-                await _context.SaveChangesAsync();
+                await _TransactionsRepository.Create(transaction);
             }
-
             return new TransactionCreateResponse
             {
-                TransactionNumber = transaction.TransactionId,
+                TransactionId = transaction.TransactionId,
                 TransactionAmount = transaction.TransactionAmount,
                 TransactionDate = Timestamp.FromDateTime(transaction.TransactionDate),
                 TransactionOrigin = transaction.TransactionOrigin,
@@ -52,15 +50,15 @@ namespace GRPC
                 IsValid = transaction.IsValid
             };
         }
-        public override async Task<TransactionListReponse> TransactionList(Empty request, ServerCallContext context)
+        public override async Task<TransactionGetAllReponse> TransactionGetAll(Empty request, ServerCallContext context)
         {
-            List<TransactionModel> transactions = await _context.Transactions.ToListAsync();
-            TransactionListReponse response = new TransactionListReponse();
-            foreach (var trans in transactions)
+            IEnumerable<TransactionModel> result = await _TransactionsRepository.GetAll();
+            TransactionGetAllReponse response = new();
+            foreach (var trans in result)
             {
-                TransactionListItem item = new TransactionListItem
+                TransactionGetAllItem item = new()
                 {
-                    TransactionNumber = trans.TransactionId,
+                    TransactionId = trans.TransactionId,
                     TransactionAmount = trans.TransactionAmount,
                     TransactionDate = Timestamp.FromDateTime(trans.TransactionDate),
                     TransactionOrigin = trans.TransactionOrigin,
@@ -73,99 +71,53 @@ namespace GRPC
         }
         public override async Task<TransactionDeleteAllResponse> TransactionDeleteAll(Empty request, ServerCallContext context)
         {
-            List<TransactionModel> transactions = await _context.Transactions.ToListAsync();
-            int transactionsCount = transactions.Count;
-            bool status = false;
-            if (transactionsCount > 0)
-            {
-                try
-                {
-                    _context.Transactions.RemoveRange(transactions);
-                    await _context.SaveChangesAsync();
-                    status = true;
-                }
-                catch { }
-            }
-            return new TransactionDeleteAllResponse
-            {
-                Success = status,
-                Deleted = transactionsCount
-            };
+            bool result = await _TransactionsRepository.DeleteAll();
+            return new TransactionDeleteAllResponse { Success = result };
         }
 
-        public override async Task<TransactionFindResponse> TransactionFind(TransactionFindParams request, ServerCallContext context)
+        public override async Task<TransactionFindByTransactionIdResponse> TransactionFindByTransactionId(TransactionFindByTransactionIdParams request, ServerCallContext context)
         {
-            var transaction = await _context.Transactions.FindAsync(request.TransactionNumber);
-            if (transaction == null)
+            TransactionModel result = await _TransactionsRepository.FindByTransactionId(request.TransactionId);
+            if (result == null)
             {
                 throw new RpcException(new Status(StatusCode.NotFound, "Transaction introuvable"));
             }
-            return new TransactionFindResponse
+            return new TransactionFindByTransactionIdResponse
             {
-                TransactionNumber = transaction.TransactionId,
-                TransactionAmount = transaction.TransactionAmount,
-                TransactionDate = Timestamp.FromDateTime(transaction.TransactionDate),
-                TransactionOrigin = transaction.TransactionOrigin,
-                TransactionDestination = transaction.TransactionDestination,
-                IsValid = transaction.IsValid
+                TransactionId = result.TransactionId,
+                TransactionAmount = result.TransactionAmount,
+                TransactionDate = Timestamp.FromDateTime(result.TransactionDate),
+                TransactionOrigin = result.TransactionOrigin,
+                TransactionDestination = result.TransactionDestination,
+                IsValid = result.IsValid
             };
         }
         public override async Task<TransactionUpdateResponse> TransactionUpdate(TransactionUpdateParams request, ServerCallContext context)
         {
-            TransactionModel transaction = new TransactionModel
+            TransactionModel transaction = new()
             {
-                TransactionId = request.TransactionNumber,
+                TransactionId = request.TransactionId,
                 TransactionAmount = request.TransactionAmount,
                 TransactionDate = request.TransactionDate.ToDateTime(),
                 TransactionOrigin = request.TransactionOrigin,
                 TransactionDestination = request.TransactionDestination,
                 IsValid = request.IsValid
             };
-            _context.Entry(transaction).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!_context.Transactions.Any(e => e.TransactionId == request.TransactionNumber))
-                {
-                    throw new RpcException(new Status(StatusCode.NotFound, "Transaction introuvable"));
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            TransactionModel result = await _TransactionsRepository.Update(request.TransactionId, transaction);
             return new TransactionUpdateResponse
             {
-                TransactionNumber = transaction.TransactionId,
-                TransactionAmount = transaction.TransactionAmount,
-                TransactionDate = Timestamp.FromDateTime(transaction.TransactionDate),
-                TransactionOrigin = transaction.TransactionOrigin,
-                TransactionDestination = transaction.TransactionDestination,
-                IsValid = transaction.IsValid
+                TransactionId = result.TransactionId,
+                TransactionAmount = result.TransactionAmount,
+                TransactionDate = Timestamp.FromDateTime(result.TransactionDate),
+                TransactionOrigin = result.TransactionOrigin,
+                TransactionDestination = result.TransactionDestination,
+                IsValid = result.IsValid
             };
         }
-        public override async Task<TransactionDeleteResponse> TransactionDelete(TransactionDeleteParams request, ServerCallContext context)
+        public override async Task<TransactionDeleteByTransactionIdResponse> TransactionDeleteByTransactionId(TransactionDeleteByTransactionIdParams request, ServerCallContext context)
         {
-            bool status = false;
-            var transaction = await _context.Transactions.FindAsync(request.TransactionNumber);
-            if (transaction != null)
-            {
-                try
-                {
-                    _context.Transactions.Remove(transaction);
-                    await _context.SaveChangesAsync();
-                    status = true;
-                }
-                catch { }
-            }
-            return new TransactionDeleteResponse
-            {
-                Success = status
-            };
+            bool result = await _TransactionsRepository.DeleteByTransactionId(request.TransactionId);
+            return new TransactionDeleteByTransactionIdResponse { Success = result };
         }
     }
 }

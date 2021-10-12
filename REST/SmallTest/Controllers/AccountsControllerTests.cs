@@ -63,13 +63,16 @@ namespace REST.SmallTest.Controllers
         public async void GivenNewAccountController_WhenAccountFindANonExistentAccountId_ThenResponseIsTypeNotFoundResult()
         {
             //Arrange
-            AccountsController sut = this.CreateAccountsController();
+            Mock<IAccountsRepository> mockAccountRepository = new();
+            mockAccountRepository.Setup(m => m.FindByAccountId(It.IsAny<int>())).ReturnsAsync(null as AccountModel);
+            AccountsController sut = this.CreateAccountsController(mockAccountRepository.Object);
 
             //Act
             ActionResult<AccountModel> response = await sut.FindByAccountId(aNonExistentAccountId);
 
             //Assert
             Assert.IsType<NotFoundResult>(response?.Result);
+            mockAccountRepository.Verify(v => v.FindByAccountId(aNonExistentAccountId));
         }
     }
 }

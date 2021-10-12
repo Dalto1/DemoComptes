@@ -41,10 +41,7 @@ namespace DataAccessLayer.Repositories
         }
         public async Task<AccountModel> FindByAccountId(int id)
         {
-            var account = await _context.Accounts.FindAsync(id);
-
-            if (account == null) return null;
-            else return account;
+            return await _context.Accounts.FindAsync(id);
         }
         public async Task<AccountModel> Update(int id, AccountModel account)
         {

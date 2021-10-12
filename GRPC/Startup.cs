@@ -5,6 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using DataAccessLayer.Data;
+using Domain.Interfaces;
+using DataAccessLayer.Repositories;
 
 namespace GRPC
 {
@@ -15,10 +17,9 @@ namespace GRPC
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddGrpc();
-            services.AddDbContext<DemoComptesContext>(context =>
-            {
-                context.UseInMemoryDatabase("DB_GRPC");
-            });
+            services.AddDbContext<DemoComptesContext>(context => { context.UseInMemoryDatabase("DB_GRPC"); });
+            services.AddScoped<IAccountsRepository, AccountsRepository>();
+            services.AddScoped<ITransactionsRepository, TransactionsRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

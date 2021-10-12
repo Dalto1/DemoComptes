@@ -7,15 +7,15 @@ option csharp_namespace = "GRPC";
 
 service ProtoTransaction {
 	rpc TransactionCreate (TransactionCreateParams) returns (TransactionCreateResponse);
-	rpc TransactionList (google.protobuf.Empty) returns (TransactionListReponse);
+	rpc TransactionGetAll (google.protobuf.Empty) returns (TransactionGetAllReponse);
 	rpc TransactionDeleteAll (google.protobuf.Empty) returns (TransactionDeleteAllResponse);
 
-	rpc TransactionFind (TransactionFindParams) returns (TransactionFindResponse);
+	rpc TransactionFindByTransactionId (TransactionFindByTransactionIdParams) returns (TransactionFindByTransactionIdResponse);
 	rpc TransactionUpdate (TransactionUpdateParams) returns (TransactionUpdateResponse);
-	rpc TransactionDelete (TransactionDeleteParams) returns (TransactionDeleteResponse);
+	rpc TransactionDeleteByTransactionId (TransactionDeleteByTransactionIdParams) returns (TransactionDeleteByTransactionIdResponse);
 }
 message TransactionCreateParams {
-	int32 TransactionNumber = 1;
+	int32 TransactionId = 1;
 	int32 TransactionAmount = 2;
     google.protobuf.Timestamp TransactionDate = 3;
 	int32 TransactionOrigin = 4;
@@ -23,34 +23,33 @@ message TransactionCreateParams {
 	bool isValid = 6;
 }
 message TransactionCreateResponse {
-	int32 TransactionNumber = 1;
+	int32 TransactionId = 1;
 	int32 TransactionAmount = 2;
     google.protobuf.Timestamp TransactionDate = 3;
 	int32 TransactionOrigin = 4;
 	int32 TransactionDestination = 5;
 	bool isValid = 6;
 }
-message TransactionListItem {
-	int32 TransactionNumber = 1;
+message TransactionGetAllItem {
+	int32 TransactionId = 1;
 	int32 TransactionAmount = 2;
     google.protobuf.Timestamp TransactionDate = 3;
 	int32 TransactionOrigin = 4;
 	int32 TransactionDestination = 5;
 	bool isValid = 6;
 }
-message TransactionListReponse {
-	repeated TransactionListItem Transaction = 1;
+message TransactionGetAllReponse {
+	repeated TransactionGetAllItem Transaction = 1;
 }
 message TransactionDeleteAllResponse {
 	bool Success = 1;
-	int32 Deleted = 2;
 }
 
-message TransactionFindParams {
-	int32 TransactionNumber = 1;
+message TransactionFindByTransactionIdParams {
+	int32 TransactionId = 1;
 }
-message TransactionFindResponse {
-	int32 TransactionNumber = 1;
+message TransactionFindByTransactionIdResponse {
+	int32 TransactionId = 1;
 	int32 TransactionAmount = 2;
     google.protobuf.Timestamp TransactionDate = 3;
 	int32 TransactionOrigin = 4;
@@ -58,7 +57,7 @@ message TransactionFindResponse {
 	bool isValid = 6;
 }
 message TransactionUpdateParams {
-	int32 TransactionNumber = 1;
+	int32 TransactionId = 1;
 	int32 TransactionAmount = 2;
     google.protobuf.Timestamp TransactionDate = 3;
 	int32 TransactionOrigin = 4;
@@ -66,16 +65,16 @@ message TransactionUpdateParams {
 	bool isValid = 6;
 }
 message TransactionUpdateResponse {
-	int32 TransactionNumber = 1;
+	int32 TransactionId = 1;
 	int32 TransactionAmount = 2;
     google.protobuf.Timestamp TransactionDate = 3;
 	int32 TransactionOrigin = 4;
 	int32 TransactionDestination = 5;
 	bool isValid = 6;
 }
-message TransactionDeleteParams {
-	int32 TransactionNumber = 1;
+message TransactionDeleteByTransactionIdParams {
+	int32 TransactionId = 1;
 }
-message TransactionDeleteResponse {
+message TransactionDeleteByTransactionIdResponse {
 	bool Success = 1;
 }

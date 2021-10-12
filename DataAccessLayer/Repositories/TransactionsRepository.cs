@@ -42,11 +42,7 @@ namespace DataAccessLayer.Repositories
 
         public async Task<TransactionModel> FindByTransactionId(int id)
         {
-            var transaction = await _context.Transactions.FindAsync(id);
-
-            if (transaction == null) return null;
-            else return transaction;
-
+            return await _context.Transactions.FindAsync(id);
         }
         public async Task<TransactionModel> Update(int id, TransactionModel transaction)
         {

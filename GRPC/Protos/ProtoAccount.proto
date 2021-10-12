@@ -8,85 +8,94 @@ option csharp_namespace = "GRPC";
 
 service ProtoAccount {
 	rpc AccountCreate (AccountCreateParams) returns (AccountCreateResponse);
-	rpc AccountList (google.protobuf.Empty) returns (AccountListResponse);
+	rpc AccountGetAll (google.protobuf.Empty) returns (AccountGetAllResponse);
 	rpc AccountDeleteAll (google.protobuf.Empty) returns (AccountDeleteAllResponse);
 	
-	rpc AccountFind (AccountFindParams) returns (AccountFindResponse);
+	rpc AccountFindByAccountId (AccountFindByAccountIdParams) returns (AccountFindByAccountIdResponse);
 	rpc AccountUpdate (AccountUpdateParams) returns (AccountUpdateResponse);
-	rpc AccountDelete (AccountDeleteParams) returns (AccountDeleteResponse);
+	rpc AccountDeleteByAccountId (AccountDeleteByAccountIdParams) returns (AccountDeleteByAccountIdResponse);
 	
-	rpc GetTransactionsByAccount (GetTransactionsByAccountParams) returns (TransactionListReponse);
-	rpc DeleteTransactionsByAccount (DeleteTransactionsByAccountParams) returns (TransactionDeleteAllResponse);
+	rpc GetAllTransactionsByAccountId (GetTransactionsByAccountIdParams) returns (TransactionGetAllReponse);
+	rpc DeleteAllTransactionsByAccountId (DeleteTransactionsByAccountIdParams) returns (TransactionDeleteAllResponse);
 }
 message AccountCreateParams {
-	int32 AccountNumber = 1;
-	int32 AccountBalance = 2;
-    google.protobuf.Timestamp AccountCreationDate = 3;
-	string AccountHolderFirstName = 4;
-	string AccountHolderLastName = 5;
-	bool IsActive = 6;
+	int32 AccountId = 1;
+	string AccountNumber = 2;
+	int32 AccountBalance = 3;
+    google.protobuf.Timestamp AccountCreationDate = 4;
+	string AccountHolderFirstName = 5;
+	string AccountHolderLastName = 6;
+	bool IsActive = 7;
 }
 message AccountCreateResponse {
-	int32 AccountNumber = 1;
-	int32 AccountBalance = 2;
-    google.protobuf.Timestamp AccountCreationDate = 3;
-	string AccountHolderFirstName = 4;
-	string AccountHolderLastName = 5;
-	bool IsActive = 6;
+	int32 AccountId = 1;
+	string AccountNumber = 2;
+	int32 AccountBalance = 3;
+    google.protobuf.Timestamp AccountCreationDate = 4;
+	string AccountHolderFirstName = 5;
+	string AccountHolderLastName = 6;
+	bool IsActive = 7;
 }
-message AccountListItem {
-	int32 AccountNumber = 1;
-	int32 AccountBalance = 2;
-    google.protobuf.Timestamp AccountCreationDate = 3;
-	string AccountHolderFirstName = 4;
-	string AccountHolderLastName = 5;
-	bool IsActive = 6;
+message AccountGetAllItem {
+	int32 AccountId = 1;
+	string AccountNumber = 2;
+	int32 AccountBalance = 3;
+    google.protobuf.Timestamp AccountCreationDate = 4;
+	string AccountHolderFirstName = 5;
+	string AccountHolderLastName = 6;
+	bool IsActive = 7;
 }
-message AccountListResponse {
-	repeated AccountListItem Account = 1;
+message AccountGetAllResponse {
+	repeated AccountGetAllItem Account = 1;
 }
 message AccountDeleteAllResponse {
 	bool Success = 1;
-	int32 Deleted = 2;
 }
 
-message AccountFindParams {
-	int32 AccountNumber = 1;
+message AccountFindByAccountIdParams {
+	int32 AccountId = 1;
 }
-message AccountFindResponse {
-	int32 AccountNumber = 1;
-	int32 AccountBalance = 2;
-    google.protobuf.Timestamp AccountCreationDate = 3;
-	string AccountHolderFirstName = 4;
-	string AccountHolderLastName = 5;
-	bool IsActive = 6;
+message AccountFindByAccountIdResponse {
+	int32 AccountId = 1;
+	string AccountNumber = 2;
+	int32 AccountBalance = 3;
+    google.protobuf.Timestamp AccountCreationDate = 4;
+	string AccountHolderFirstName = 5;
+	string AccountHolderLastName = 6;
+	bool IsActive = 7;
+}
+message AccountUpdateItem {
+	int32 AccountId = 1;
+	string AccountNumber = 2;
+	int32 AccountBalance = 3;
+    google.protobuf.Timestamp AccountCreationDate = 4;
+	string AccountHolderFirstName = 5;
+	string AccountHolderLastName = 6;
+	bool IsActive = 7;
 }
 message AccountUpdateParams {
-	int32 AccountNumber = 1;
-	int32 AccountBalance = 2;
-    google.protobuf.Timestamp AccountCreationDate = 3;
-	string AccountHolderFirstName = 4;
-	string AccountHolderLastName = 5;
-	bool IsActive = 6;
+	int32 AccountId = 1;
+	AccountUpdateItem Account = 2;
 }
 message AccountUpdateResponse {
-	int32 AccountNumber = 1;
-	int32 AccountBalance = 2;
-    google.protobuf.Timestamp AccountCreationDate = 3;
-	string AccountHolderFirstName = 4;
-	string AccountHolderLastName = 5;
-	bool IsActive = 6;
+	int32 AccountId = 1;
+	string AccountNumber = 2;
+	int32 AccountBalance = 3;
+    google.protobuf.Timestamp AccountCreationDate = 4;
+	string AccountHolderFirstName = 5;
+	string AccountHolderLastName = 6;
+	bool IsActive = 7;
 }
-message AccountDeleteParams {
-	int32 AccountNumber = 1;
+message AccountDeleteByAccountIdParams {
+	int32 AccountId = 1;
 }
-message AccountDeleteResponse {
+message AccountDeleteByAccountIdResponse {
 	bool Success = 1;
 }
 
-message GetTransactionsByAccountParams {
-	int32 AccountNumber = 1;
+message GetTransactionsByAccountIdParams {
+	int32 AccountId = 1;
 }
-message DeleteTransactionsByAccountParams {
-	int32 AccountNumber = 1;
+message DeleteTransactionsByAccountIdParams {
+	int32 AccountId = 1;
 }

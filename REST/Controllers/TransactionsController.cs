@@ -10,16 +10,31 @@ namespace REST.Controllers
     [ApiController]
     public class TransactionsController : ControllerBase
     {
+        private readonly IAccountsRepository _AccountsRepository;
         private readonly ITransactionsRepository _TransactionsRepository;
-        public TransactionsController(ITransactionsRepository transactionRepository)
+        public TransactionsController(IAccountsRepository accountsRepository, ITransactionsRepository transactionRepository)
         {
+            _AccountsRepository = accountsRepository;
             _TransactionsRepository = transactionRepository;
         }
 
         [HttpPost]
         public async Task<ActionResult<TransactionModel>> Create(TransactionModel transaction)
         {
-            TransactionModel result = await _TransactionsRepository.Create(transaction);
+            TransactionModel result = null;
+            AccountModel compteOrigine = await _AccountsRepository.FindByAccountId(transaction.TransactionOrigin);
+            AccountModel compteDestination = await _AccountsRepository.FindByAccountId(transaction.TransactionDestination);
+            if (transaction.TransactionAmount < 0)
+            {
+                transaction.IsValid = false;
+            }
+            else
+            {
+                if (compteOrigine != null) compteOrigine.AccountBalance -= transaction.TransactionAmount;
+                if (compteDestination != null) compteDestination.AccountBalance += transaction.TransactionAmount;
+                result = await _TransactionsRepository.Create(transaction);
+            }
+
             if (result == null) return NoContent();
             return CreatedAtAction("TransactionFind", new { id = result.TransactionId }, result);
         }
