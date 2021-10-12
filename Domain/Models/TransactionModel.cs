@@ -6,7 +6,7 @@ namespace Domain.Models
     public class TransactionModel
     {
         [Key]
-        public int TransactionNumber { get; set; }
+        public int TransactionId { get; set; }
         [Required]
         public int TransactionAmount { get; set; }
         [Required]

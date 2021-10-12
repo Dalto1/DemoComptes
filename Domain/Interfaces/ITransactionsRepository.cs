@@ -6,12 +6,12 @@ namespace Domain.Interfaces
 {
     public interface ITransactionsRepository
     {
-        Task<TransactionModel> TransactionCreate(TransactionModel transaction);
-        Task<IEnumerable<TransactionModel>> TransactionList();
-        Task<bool> TransactionDeleteAll();
+        Task<TransactionModel> Create(TransactionModel transaction);
+        Task<IEnumerable<TransactionModel>> GetAll();
+        Task<bool> DeleteAll();
 
-        Task<TransactionModel> TransactionFind(int id);
-        Task<TransactionModel> TransactionUpdate(int id, TransactionModel transaction);
-        Task<bool> TransactionDelete(int id);
+        Task<TransactionModel> FindByTransactionId(int id);
+        Task<TransactionModel> Update(int id, TransactionModel transaction);
+        Task<bool> DeleteByTransactionId(int id);
     }
 }

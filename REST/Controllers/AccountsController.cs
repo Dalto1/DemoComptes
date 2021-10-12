@@ -18,60 +18,60 @@ namespace REST.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<AccountModel>> AccountCreate(AccountModel account)
+        public async Task<ActionResult<AccountModel>> Create(AccountModel account)
         {
-            AccountModel result = await _AccountsRepository.AccountCreate(account);
+            AccountModel result = await _AccountsRepository.Create(account);
             if (result == null) return NoContent();
-            return CreatedAtAction("AccountFind", new { id = result.AccountNumber }, result);
+            return CreatedAtAction("FindByAccountId", new { id = result.AccountId }, result);
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AccountModel>>> AccountList()
+        public async Task<ActionResult<IEnumerable<AccountModel>>> GetAll()
         {
-            IEnumerable<AccountModel> result = await _AccountsRepository.AccountList();
+            IEnumerable<AccountModel> result = await _AccountsRepository.GetAll();
             if (result == null) return NoContent();
             return Ok(result);
         }
         [HttpDelete]
-        public async Task<IActionResult> AccountDeleteAll()
+        public async Task<IActionResult> DeleteAll()
         {
-            bool result = await _AccountsRepository.AccountDeleteAll();
+            bool result = await _AccountsRepository.DeleteAll();
             if (!result) return NotFound();
             return NoContent();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<AccountModel>> AccountFind(int id)
+        public async Task<ActionResult<AccountModel>> FindByAccountId(int id)
         {
-            AccountModel result = await _AccountsRepository.AccountFind(id);
+            AccountModel result = await _AccountsRepository.FindByAccountId(id);
             if (result == null) return NotFound();
             return Ok(result);
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> AccountUpdate(int id, AccountModel account)
+        public async Task<IActionResult> Update(int id, AccountModel account)
         {
-            AccountModel result = await _AccountsRepository.AccountUpdate(id, account);
+            AccountModel result = await _AccountsRepository.Update(id, account);
             if (result == null) return NotFound();
             return Ok(result);
         }
         [HttpDelete("{id}")]
-        public async Task<IActionResult> AccountDelete(int id) 
+        public async Task<IActionResult> DeleteByAccountId(int id) 
         {
-            bool result = await _AccountsRepository.AccountDelete(id);
+            bool result = await _AccountsRepository.DeleteByAccountId(id);
             if (!result) return NotFound();
             return NoContent();
         }
 
         [HttpGet("{id}/transactions")]
-        public async Task<ActionResult<IEnumerable<TransactionModel>>> GetTransactionsByAccount(int id)
+        public async Task<ActionResult<IEnumerable<TransactionModel>>> GetTransactionsByAccountId(int id)
         {
-            IEnumerable<TransactionModel> result = await _AccountsRepository.GetTransactionsByAccount(id);
+            IEnumerable<TransactionModel> result = await _AccountsRepository.GetTransactionsByAccountId(id);
             if (result == null) return NotFound();
             return Ok(result);
         }
         [HttpDelete("{id}/transactions")]
-        public async Task<IActionResult> DeleteTransactionsByAccount(int id)
+        public async Task<IActionResult> DeleteTransactionsByAccountId(int id)
         {
-            bool result = await _AccountsRepository.DeleteTransactionsByAccount(id);
+            bool result = await _AccountsRepository.DeleteTransactionsByAccountId(id);
             if (!result) return NotFound();
             return NoContent();
         }

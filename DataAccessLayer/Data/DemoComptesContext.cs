@@ -7,7 +7,7 @@ namespace DataAccessLayer.Data
     {
         public DemoComptesContext(DbContextOptions<DemoComptesContext> options) : base(options) { }
 
-        public DbSet<AccountModel> Account { get; set; }
-        public DbSet<TransactionModel> Transaction { get; set; }
+        public DbSet<AccountModel> Accounts { get; set; }
+        public DbSet<TransactionModel> Transactions { get; set; }
     }
 }

@@ -20,14 +20,14 @@ namespace GRPC
         {
             AccountModel account = new AccountModel
             {
-                AccountNumber = request.AccountNumber,
+                AccountId = request.AccountNumber,
                 AccountBalance = request.AccountBalance,
                 AccountCreationDate = request.AccountCreationDate.ToDateTime(),
                 AccountHolderFirstName = request.AccountHolderFirstName,
                 AccountHolderLastName = request.AccountHolderLastName,
                 IsActive = request.IsActive
             };
-            _context.Account.Add(account);
+            _context.Accounts.Add(account);
             await _context.SaveChangesAsync();
 
             return new AccountCreateResponse
@@ -42,13 +42,13 @@ namespace GRPC
         }
         public override async Task<AccountListResponse> AccountList(Empty request, ServerCallContext context)
         {
-            List<AccountModel> accounts = await _context.Account.ToListAsync();
+            List<AccountModel> accounts = await _context.Accounts.ToListAsync();
             AccountListResponse response = new AccountListResponse();
             foreach (var acc in accounts)
             {
                 AccountListItem item = new AccountListItem
                 {
-                    AccountNumber = acc.AccountNumber,
+                    AccountNumber = acc.AccountId,
                     AccountBalance = acc.AccountBalance,
                     AccountCreationDate = Timestamp.FromDateTime(acc.AccountCreationDate),
                     AccountHolderFirstName = acc.AccountHolderFirstName,
@@ -61,14 +61,14 @@ namespace GRPC
         }
         public override async Task<AccountDeleteAllResponse> AccountDeleteAll(Empty request, ServerCallContext context)
         {
-            List<AccountModel> accounts = await _context.Account.ToListAsync();
+            List<AccountModel> accounts = await _context.Accounts.ToListAsync();
             int accountsCount = accounts.Count;
             bool status = false;
             if (accountsCount > 0)
             {
                 try
                 {
-                    _context.Account.RemoveRange(accounts);
+                    _context.Accounts.RemoveRange(accounts);
                     await _context.SaveChangesAsync();
                     status = true;
                 }
@@ -83,7 +83,7 @@ namespace GRPC
 
         public override async Task<AccountFindResponse> AccountFind(AccountFindParams request, ServerCallContext context)
         {
-            var account = await _context.Account.FindAsync(request.AccountNumber);
+            var account = await _context.Accounts.FindAsync(request.AccountNumber);
 
             if (account == null)
             {
@@ -91,7 +91,7 @@ namespace GRPC
             }
             return new AccountFindResponse
             {
-                AccountNumber = account.AccountNumber,
+                AccountNumber = account.AccountId,
                 AccountBalance = account.AccountBalance,
                 AccountCreationDate = Timestamp.FromDateTime(account.AccountCreationDate),
                 AccountHolderFirstName = account.AccountHolderFirstName,
@@ -103,7 +103,7 @@ namespace GRPC
         {
             AccountModel account = new AccountModel
             {
-                AccountNumber = request.AccountNumber,
+                AccountId = request.AccountNumber,
                 AccountBalance = request.AccountBalance,
                 AccountCreationDate = request.AccountCreationDate.ToDateTime(),
                 AccountHolderFirstName = request.AccountHolderFirstName,
@@ -118,7 +118,7 @@ namespace GRPC
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_context.Account.Any(e => e.AccountNumber == request.AccountNumber))
+                if (!_context.Accounts.Any(e => e.AccountId == request.AccountNumber))
                 {
                     throw new RpcException(new Status(StatusCode.NotFound, "Compte introuvable"));
                 }
@@ -129,7 +129,7 @@ namespace GRPC
             }
             return new AccountUpdateResponse
             {
-                AccountNumber = account.AccountNumber,
+                AccountNumber = account.AccountId,
                 AccountBalance = account.AccountBalance,
                 AccountCreationDate = Timestamp.FromDateTime(account.AccountCreationDate),
                 AccountHolderFirstName = account.AccountHolderFirstName,
@@ -140,12 +140,12 @@ namespace GRPC
         public override async Task<AccountDeleteResponse> AccountDelete(AccountDeleteParams request, ServerCallContext context)
         {
             bool status = false;
-            var account = await _context.Account.FindAsync(request.AccountNumber);
+            var account = await _context.Accounts.FindAsync(request.AccountNumber);
             if (account != null)
             {
                 try
                 {
-                    _context.Account.Remove(account);
+                    _context.Accounts.Remove(account);
                     await _context.SaveChangesAsync();
                     status = true;
                 }
@@ -159,14 +159,14 @@ namespace GRPC
 
         public override async Task<TransactionListReponse> GetTransactionsByAccount(GetTransactionsByAccountParams request, ServerCallContext context)
         {
-            List<TransactionModel> transactions = await _context.Transaction.Where(s => (s.TransactionOrigin.Equals(request.AccountNumber) || s.TransactionDestination.Equals(request.AccountNumber))).ToListAsync();
+            List<TransactionModel> transactions = await _context.Transactions.Where(s => (s.TransactionOrigin.Equals(request.AccountNumber) || s.TransactionDestination.Equals(request.AccountNumber))).ToListAsync();
 
             TransactionListReponse response = new TransactionListReponse();
             foreach (var trans in transactions)
             {
                 TransactionListItem item = new TransactionListItem
                 {
-                    TransactionNumber = trans.TransactionNumber,
+                    TransactionNumber = trans.TransactionId,
                     TransactionAmount = trans.TransactionAmount,
                     TransactionDate = Timestamp.FromDateTime(trans.TransactionDate),
                     TransactionOrigin = trans.TransactionOrigin,
@@ -179,14 +179,14 @@ namespace GRPC
         }
         public override async Task<TransactionDeleteAllResponse> DeleteTransactionsByAccount(DeleteTransactionsByAccountParams request, ServerCallContext context)
         {
-            List<TransactionModel> transactions = await _context.Transaction.Where(s => (s.TransactionOrigin.Equals(request.AccountNumber) || s.TransactionDestination.Equals(request.AccountNumber))).ToListAsync();
+            List<TransactionModel> transactions = await _context.Transactions.Where(s => (s.TransactionOrigin.Equals(request.AccountNumber) || s.TransactionDestination.Equals(request.AccountNumber))).ToListAsync();
             int transactionsCount = transactions.Count;
             bool status = false;
             if (transactionsCount > 0)
             {
                 try
                 {
-                    _context.Transaction.RemoveRange(transactions);
+                    _context.Transactions.RemoveRange(transactions);
                     await _context.SaveChangesAsync();
                     status = true;
                 }

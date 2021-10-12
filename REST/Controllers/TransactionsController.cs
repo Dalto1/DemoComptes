@@ -17,45 +17,45 @@ namespace REST.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<TransactionModel>> TransactionCreate(TransactionModel transaction)
+        public async Task<ActionResult<TransactionModel>> Create(TransactionModel transaction)
         {
-            TransactionModel result = await _TransactionsRepository.TransactionCreate(transaction);
+            TransactionModel result = await _TransactionsRepository.Create(transaction);
             if (result == null) return NoContent();
-            return CreatedAtAction("TransactionFind", new { id = result.TransactionNumber }, result);
+            return CreatedAtAction("TransactionFind", new { id = result.TransactionId }, result);
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TransactionModel>>> TransactionList()
+        public async Task<ActionResult<IEnumerable<TransactionModel>>> GetAll()
         {
-            IEnumerable<TransactionModel> result = await _TransactionsRepository.TransactionList();
+            IEnumerable<TransactionModel> result = await _TransactionsRepository.GetAll();
             if (result == null) return NoContent();
             return Ok(result);
         }
         [HttpDelete]
-        public async Task<IActionResult> TransactionDeleteAll()
+        public async Task<IActionResult> DeleteAll()
         {
-            bool result = await _TransactionsRepository.TransactionDeleteAll();
+            bool result = await _TransactionsRepository.DeleteAll();
             if (!result) return NotFound();
             return NoContent();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<TransactionModel>> TransactionFind(int id)
+        public async Task<ActionResult<TransactionModel>> FindByTransactionId(int id)
         {
-            TransactionModel result = await _TransactionsRepository.TransactionFind(id);
+            TransactionModel result = await _TransactionsRepository.FindByTransactionId(id);
             if (result == null) return NotFound();
             return Ok(result);
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> TransactionUpdate(int id, TransactionModel transaction)
+        public async Task<IActionResult> Update(int id, TransactionModel transaction)
         {
-            TransactionModel result = await _TransactionsRepository.TransactionUpdate(id, transaction);
+            TransactionModel result = await _TransactionsRepository.Update(id, transaction);
             if (result == null) return NotFound();
             return Ok(result);
         }
         [HttpDelete("{id}")]
-        public async Task<IActionResult> TransactionDelete(int id)
+        public async Task<IActionResult> DeleteByTransactionId(int id)
         {
-            bool result = await _TransactionsRepository.TransactionDelete(id);
+            bool result = await _TransactionsRepository.DeleteByTransactionId(id);
             if (!result) return NotFound();
             return NoContent();
         }

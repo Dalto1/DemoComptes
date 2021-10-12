@@ -17,101 +17,72 @@ namespace DataAccessLayer.Repositories
             _context = context;
         }
 
-        public async Task<AccountModel> AccountCreate(AccountModel account)
+        public async Task<AccountModel> Create(AccountModel account)
         {
-            try
-            {
-                _context.Account.Add(account);
-                await _context.SaveChangesAsync();
-                return await AccountFind(account.AccountNumber);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            _context.Accounts.Add(account);
+            await _context.SaveChangesAsync();
+            return account;
         }
-        public async Task<IEnumerable<AccountModel>> AccountList()
+        public async Task<IEnumerable<AccountModel>> GetAll()
         {
-            try
-            {
-                return await _context.Account.ToListAsync();
-            }
-            catch (Exception)
-            {
-
-                return null;
-            }
+            return await _context.Accounts.ToListAsync();            
         }
-        public async Task<bool> AccountDeleteAll()
+        public async Task<bool> DeleteAll()
         {
-            try
+            DbSet<AccountModel> allAccounts = _context.Accounts;
+            if (allAccounts != null)
             {
-                _context.Account.RemoveRange(_context.Account);
+                _context.Accounts.RemoveRange(allAccounts);
                 await _context.SaveChangesAsync();
                 return true;
             }
-            catch (Exception)
-            {
+            else
                 return false;
-            }
         }
-
-        public async Task<AccountModel> AccountFind(int id)
+        public async Task<AccountModel> FindByAccountId(int id)
         {
-            var account = await _context.Account.FindAsync(id);
+            var account = await _context.Accounts.FindAsync(id);
 
             if (account == null) return null;
             else return account;
         }
-        public async Task<AccountModel> AccountUpdate(int id, AccountModel account)
+        public async Task<AccountModel> Update(int id, AccountModel account)
         {
-            try
-            {
-                _context.Entry(account).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
-                return await AccountFind(account.AccountNumber);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            _context.Entry(account).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return await FindByAccountId(account.AccountId);
+            
         }
-        public async Task<bool> AccountDelete(int id)
+        public async Task<bool> DeleteByAccountId(int id)
         {
-            try
+            AccountModel account = await _context.Accounts.FindAsync(id);
+            if (account != null)
             {
-                AccountModel account = await _context.Account.FindAsync(id);
-                _context.Account.Remove(account);
+                _context.Accounts.Remove(account);
                 await _context.SaveChangesAsync();
                 return true;
             }
-            catch (Exception)
+            else
             {
                 return false;
             }
         }
 
-        public async Task<IEnumerable<TransactionModel>> GetTransactionsByAccount(int id)
+        public async Task<IEnumerable<TransactionModel>> GetTransactionsByAccountId(int id)
         {
-            try
-            {
-                IEnumerable<TransactionModel> transactions = await _context.Transaction.Where(s => (s.TransactionOrigin.Equals(id) || s.TransactionDestination.Equals(id))).ToListAsync();
-                return transactions;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            IEnumerable<TransactionModel> transactions = await _context.Transactions.Where(s => (s.TransactionOrigin.Equals(id) || s.TransactionDestination.Equals(id))).ToListAsync();
+            return transactions;
         }
-        public async Task<bool> DeleteTransactionsByAccount(int id)
+        public async Task<bool> DeleteTransactionsByAccountId(int id)
         {
-            try
+            IQueryable<TransactionModel> accounts = _context.Transactions.Where(s => (s.TransactionOrigin.Equals(id) || s.TransactionDestination.Equals(id)));
+            if (accounts != null)
             {
-                _context.Transaction.RemoveRange(_context.Transaction.Where(s => (s.TransactionOrigin.Equals(id) || s.TransactionDestination.Equals(id))));
+                _context.Transactions.RemoveRange(accounts);
                 await _context.SaveChangesAsync();
                 return true;
             }
-            catch (Exception)
+            else
             {
                 return false;
             }

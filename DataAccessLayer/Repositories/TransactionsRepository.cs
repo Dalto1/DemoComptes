@@ -15,79 +15,55 @@ namespace DataAccessLayer.Repositories
         {
             _context = context;
         }
-        public async Task<TransactionModel> TransactionCreate(TransactionModel transaction)
+        public async Task<TransactionModel> Create(TransactionModel transaction)
         {
-            try
-            {
-                _context.Transaction.Add(transaction);
-                await _context.SaveChangesAsync();
-                return await TransactionFind(transaction.TransactionNumber);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-
+            _context.Transactions.Add(transaction);
+            await _context.SaveChangesAsync();
+            return transaction;
         }
-        public async Task<IEnumerable<TransactionModel>> TransactionList()
+        public async Task<IEnumerable<TransactionModel>> GetAll()
         {
-            try
-            {
-                return await _context.Transaction.ToListAsync();
-            }
-            catch (Exception)
-            {
-
-                return null;
-            }
-
+            return await _context.Transactions.ToListAsync();
         }
-        public async Task<bool> TransactionDeleteAll()
+        public async Task<bool> DeleteAll()
         {
-            try
+            DbSet<TransactionModel> allTransactions = _context.Transactions;
+            if (allTransactions != null)
             {
-                _context.Transaction.RemoveRange(_context.Transaction);
+                _context.Transactions.RemoveRange(allTransactions);
                 await _context.SaveChangesAsync();
                 return true;
             }
-            catch (Exception)
+            else
             {
                 return false;
             }
         }
 
-        public async Task<TransactionModel> TransactionFind(int id)
+        public async Task<TransactionModel> FindByTransactionId(int id)
         {
-            var transaction = await _context.Transaction.FindAsync(id);
+            var transaction = await _context.Transactions.FindAsync(id);
 
             if (transaction == null) return null;
             else return transaction;
 
         }
-        public async Task<TransactionModel> TransactionUpdate(int id, TransactionModel transaction)
+        public async Task<TransactionModel> Update(int id, TransactionModel transaction)
         {
-            try
-            {
-                _context.Entry(transaction).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
-                return await TransactionFind(transaction.TransactionNumber);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-
+            _context.Entry(transaction).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return await FindByTransactionId(transaction.TransactionId);
         }
-        public async Task<bool> TransactionDelete(int id)
+        public async Task<bool> DeleteByTransactionId(int id)
         {
-            try
+            TransactionModel transaction = await _context.Transactions.FindAsync(id);
+            if (transaction != null)
             {
-                TransactionModel transaction = await _context.Transaction.FindAsync(id);
-                _context.Transaction.Remove(transaction);
+                _context.Transactions.Remove(transaction);
                 await _context.SaveChangesAsync();
                 return true;
             }
-            catch (Exception)
+            else
             {
                 return false;
             }

@@ -21,15 +21,15 @@ namespace GRPC
         {
             TransactionModel transaction = new TransactionModel
             {
-                TransactionNumber = request.TransactionNumber,
+                TransactionId = request.TransactionNumber,
                 TransactionAmount = request.TransactionAmount,
                 TransactionDate = request.TransactionDate.ToDateTime(),
                 TransactionOrigin = request.TransactionOrigin,
                 TransactionDestination = request.TransactionDestination,
                 IsValid = request.IsValid
             };
-            AccountModel compteOrigine = await _context.Account.FindAsync(transaction.TransactionOrigin);
-            AccountModel compteDestination = await _context.Account.FindAsync(transaction.TransactionDestination);
+            AccountModel compteOrigine = await _context.Accounts.FindAsync(transaction.TransactionOrigin);
+            AccountModel compteDestination = await _context.Accounts.FindAsync(transaction.TransactionDestination);
             if (transaction.TransactionAmount < 0)
             {
                 transaction.IsValid = false;
@@ -38,13 +38,13 @@ namespace GRPC
             {
                 if (compteOrigine != null) compteOrigine.AccountBalance -= transaction.TransactionAmount;
                 if (compteDestination != null) compteDestination.AccountBalance += transaction.TransactionAmount;
-                _context.Transaction.Add(transaction);
+                _context.Transactions.Add(transaction);
                 await _context.SaveChangesAsync();
             }
 
             return new TransactionCreateResponse
             {
-                TransactionNumber = transaction.TransactionNumber,
+                TransactionNumber = transaction.TransactionId,
                 TransactionAmount = transaction.TransactionAmount,
                 TransactionDate = Timestamp.FromDateTime(transaction.TransactionDate),
                 TransactionOrigin = transaction.TransactionOrigin,
@@ -54,13 +54,13 @@ namespace GRPC
         }
         public override async Task<TransactionListReponse> TransactionList(Empty request, ServerCallContext context)
         {
-            List<TransactionModel> transactions = await _context.Transaction.ToListAsync();
+            List<TransactionModel> transactions = await _context.Transactions.ToListAsync();
             TransactionListReponse response = new TransactionListReponse();
             foreach (var trans in transactions)
             {
                 TransactionListItem item = new TransactionListItem
                 {
-                    TransactionNumber = trans.TransactionNumber,
+                    TransactionNumber = trans.TransactionId,
                     TransactionAmount = trans.TransactionAmount,
                     TransactionDate = Timestamp.FromDateTime(trans.TransactionDate),
                     TransactionOrigin = trans.TransactionOrigin,
@@ -73,14 +73,14 @@ namespace GRPC
         }
         public override async Task<TransactionDeleteAllResponse> TransactionDeleteAll(Empty request, ServerCallContext context)
         {
-            List<TransactionModel> transactions = await _context.Transaction.ToListAsync();
+            List<TransactionModel> transactions = await _context.Transactions.ToListAsync();
             int transactionsCount = transactions.Count;
             bool status = false;
             if (transactionsCount > 0)
             {
                 try
                 {
-                    _context.Transaction.RemoveRange(transactions);
+                    _context.Transactions.RemoveRange(transactions);
                     await _context.SaveChangesAsync();
                     status = true;
                 }
@@ -95,14 +95,14 @@ namespace GRPC
 
         public override async Task<TransactionFindResponse> TransactionFind(TransactionFindParams request, ServerCallContext context)
         {
-            var transaction = await _context.Transaction.FindAsync(request.TransactionNumber);
+            var transaction = await _context.Transactions.FindAsync(request.TransactionNumber);
             if (transaction == null)
             {
                 throw new RpcException(new Status(StatusCode.NotFound, "Transaction introuvable"));
             }
             return new TransactionFindResponse
             {
-                TransactionNumber = transaction.TransactionNumber,
+                TransactionNumber = transaction.TransactionId,
                 TransactionAmount = transaction.TransactionAmount,
                 TransactionDate = Timestamp.FromDateTime(transaction.TransactionDate),
                 TransactionOrigin = transaction.TransactionOrigin,
@@ -114,7 +114,7 @@ namespace GRPC
         {
             TransactionModel transaction = new TransactionModel
             {
-                TransactionNumber = request.TransactionNumber,
+                TransactionId = request.TransactionNumber,
                 TransactionAmount = request.TransactionAmount,
                 TransactionDate = request.TransactionDate.ToDateTime(),
                 TransactionOrigin = request.TransactionOrigin,
@@ -129,7 +129,7 @@ namespace GRPC
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_context.Transaction.Any(e => e.TransactionNumber == request.TransactionNumber))
+                if (!_context.Transactions.Any(e => e.TransactionId == request.TransactionNumber))
                 {
                     throw new RpcException(new Status(StatusCode.NotFound, "Transaction introuvable"));
                 }
@@ -140,7 +140,7 @@ namespace GRPC
             }
             return new TransactionUpdateResponse
             {
-                TransactionNumber = transaction.TransactionNumber,
+                TransactionNumber = transaction.TransactionId,
                 TransactionAmount = transaction.TransactionAmount,
                 TransactionDate = Timestamp.FromDateTime(transaction.TransactionDate),
                 TransactionOrigin = transaction.TransactionOrigin,
@@ -151,12 +151,12 @@ namespace GRPC
         public override async Task<TransactionDeleteResponse> TransactionDelete(TransactionDeleteParams request, ServerCallContext context)
         {
             bool status = false;
-            var transaction = await _context.Transaction.FindAsync(request.TransactionNumber);
+            var transaction = await _context.Transactions.FindAsync(request.TransactionNumber);
             if (transaction != null)
             {
                 try
                 {
-                    _context.Transaction.Remove(transaction);
+                    _context.Transactions.Remove(transaction);
                     await _context.SaveChangesAsync();
                     status = true;
                 }

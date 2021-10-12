@@ -6,15 +6,15 @@ namespace Domain.Interfaces
 {
     public interface IAccountsRepository
     {
-        Task<AccountModel> AccountCreate(AccountModel account);
-        Task<IEnumerable<AccountModel>> AccountList();
-        Task<bool> AccountDeleteAll();
+        Task<AccountModel> Create(AccountModel account);
+        Task<IEnumerable<AccountModel>> GetAll();
+        Task<bool> DeleteAll();
 
-        Task<AccountModel> AccountFind(int id);
-        Task<AccountModel> AccountUpdate(int id, AccountModel account);
-        Task<bool> AccountDelete(int id);
+        Task<AccountModel> FindByAccountId(int id);
+        Task<AccountModel> Update(int id, AccountModel account);
+        Task<bool> DeleteByAccountId(int id);
 
-        Task<IEnumerable<TransactionModel>> GetTransactionsByAccount(int id);
-        Task<bool> DeleteTransactionsByAccount(int id);
+        Task<IEnumerable<TransactionModel>> GetTransactionsByAccountId(int id);
+        Task<bool> DeleteTransactionsByAccountId(int id);
     }
 }

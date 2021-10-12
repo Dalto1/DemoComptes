@@ -6,7 +6,7 @@ namespace Domain.Models
     public class AccountModel
     {
         [Key]
-        public int AccountNumber { get; set; }
+        public int AccountId { get; set; }
         [Required]
         public int AccountBalance { get; set; }
         [Required]
