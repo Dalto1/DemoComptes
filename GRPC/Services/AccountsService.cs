@@ -87,15 +87,15 @@ namespace GRPC
         {
             AccountModel account = new()
             {
-                AccountId = request.Account.AccountId,
-                AccountNumber = request.Account.AccountNumber,
-                AccountBalance = request.Account.AccountBalance,
-                AccountCreationDate = request.Account.AccountCreationDate.ToDateTime(),
-                AccountHolderFirstName = request.Account.AccountHolderFirstName,
-                AccountHolderLastName = request.Account.AccountHolderLastName,
-                IsActive = request.Account.IsActive
+                AccountId = request.AccountId,
+                AccountNumber = request.AccountNumber,
+                AccountBalance = request.AccountBalance,
+                AccountCreationDate = request.AccountCreationDate.ToDateTime(),
+                AccountHolderFirstName = request.AccountHolderFirstName,
+                AccountHolderLastName = request.AccountHolderLastName,
+                IsActive = request.IsActive
             };
-            AccountModel result = await _AccountsRepository.Update(request.AccountId, account);
+            AccountModel result = await _AccountsRepository.Update(account);
             return new AccountUpdateResponse
             {
                 AccountId = result.AccountId,

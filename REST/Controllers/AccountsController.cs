@@ -6,7 +6,7 @@ using Domain.Interfaces;
 
 namespace REST.Controllers
 {
-    [Route("api/comptes")]
+    [Route("api/accounts")]
     [ApiController]
     public class AccountsController : ControllerBase
     {
@@ -47,9 +47,9 @@ namespace REST.Controllers
             return Ok(result);
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, AccountModel account)
+        public async Task<IActionResult> Update(AccountModel account)
         {
-            AccountModel result = await _AccountsRepository.Update(id, account);
+            AccountModel result = await _AccountsRepository.Update(account);
             if (result == null) return NotFound();
             return Ok(result);
         }

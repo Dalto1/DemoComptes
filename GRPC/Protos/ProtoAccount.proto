@@ -64,7 +64,7 @@ message AccountFindByAccountIdResponse {
 	string AccountHolderLastName = 6;
 	bool IsActive = 7;
 }
-message AccountUpdateItem {
+message AccountUpdateParams {
 	int32 AccountId = 1;
 	string AccountNumber = 2;
 	int32 AccountBalance = 3;
@@ -72,10 +72,6 @@ message AccountUpdateItem {
 	string AccountHolderFirstName = 5;
 	string AccountHolderLastName = 6;
 	bool IsActive = 7;
-}
-message AccountUpdateParams {
-	int32 AccountId = 1;
-	AccountUpdateItem Account = 2;
 }
 message AccountUpdateResponse {
 	int32 AccountId = 1;

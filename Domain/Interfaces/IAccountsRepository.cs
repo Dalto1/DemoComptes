@@ -11,10 +11,10 @@ namespace Domain.Interfaces
         Task<bool> DeleteAll();
 
         Task<AccountModel> FindByAccountId(int id);
-        Task<AccountModel> Update(int id, AccountModel account);
+        Task<AccountModel> Update(AccountModel account);
         Task<bool> DeleteByAccountId(int id);
 
-        Task<IEnumerable<TransactionModel>> GetTransactionsByAccountId(int id);
+        Task<List<TransactionModel>> GetTransactionsByAccountId(int id);
         Task<bool> DeleteTransactionsByAccountId(int id);
     }
 }

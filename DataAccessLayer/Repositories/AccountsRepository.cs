@@ -43,11 +43,11 @@ namespace DataAccessLayer.Repositories
         {
             return await _context.Accounts.FindAsync(id);
         }
-        public async Task<AccountModel> Update(int id, AccountModel account)
+        public async Task<AccountModel> Update(AccountModel account)
         {
             _context.Entry(account).State = EntityState.Modified;
             await _context.SaveChangesAsync();
-            return await FindByAccountId(account.AccountId);
+            return account;
             
         }
         public async Task<bool> DeleteByAccountId(int id)
@@ -65,14 +65,13 @@ namespace DataAccessLayer.Repositories
             }
         }
 
-        public async Task<IEnumerable<TransactionModel>> GetTransactionsByAccountId(int id)
+        public async Task<List<TransactionModel>> GetTransactionsByAccountId(int id)
         {
-            IEnumerable<TransactionModel> transactions = await _context.Transactions.Where(s => (s.TransactionOrigin.Equals(id) || s.TransactionDestination.Equals(id))).ToListAsync();
-            return transactions;
+            return await _context.Transactions.Where(s => (s.TransactionOrigin.Equals(id) || s.TransactionDestination.Equals(id))).ToListAsync();
         }
         public async Task<bool> DeleteTransactionsByAccountId(int id)
         {
-            IQueryable<TransactionModel> accounts = _context.Transactions.Where(s => (s.TransactionOrigin.Equals(id) || s.TransactionDestination.Equals(id)));
+            List<TransactionModel> accounts = await _context.Transactions.Where(s => (s.TransactionOrigin.Equals(id) || s.TransactionDestination.Equals(id))).ToListAsync();
             if (accounts != null)
             {
                 _context.Transactions.RemoveRange(accounts);
