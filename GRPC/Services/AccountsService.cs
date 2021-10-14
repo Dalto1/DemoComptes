@@ -125,8 +125,7 @@ namespace GRPC
                     TransactionAmount = transaction.TransactionAmount,
                     TransactionDate = Timestamp.FromDateTime(transaction.TransactionDate),
                     TransactionOrigin = transaction.TransactionOrigin,
-                    TransactionDestination = transaction.TransactionDestination,
-                    IsValid = transaction.IsValid
+                    TransactionDestination = transaction.TransactionDestination
                 };
                 response.Transaction.Add(item);
             }

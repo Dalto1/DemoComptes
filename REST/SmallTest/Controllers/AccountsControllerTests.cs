@@ -21,7 +21,7 @@ namespace REST.SmallTest.Controllers
             AccountHolderFirstName = "Paul",
             AccountHolderLastName = "Houde",
             IsActive = true
-        }; 
+        };
         private AccountsController CreateAccountsController(IAccountsRepository accountsRepository = null)
         {
             var mockAccountRepository = accountsRepository ?? new Mock<IAccountsRepository>().Object;

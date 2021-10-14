@@ -43,12 +43,15 @@ namespace DataAccessLayer.Repositories
         {
             return await _context.Accounts.FindAsync(id);
         }
+        public async Task<List<AccountModel>> FindByAccountsIds(List<int> ids)
+        {
+            return await _context.Accounts.Where(items => ids.Contains(items.AccountId)).ToListAsync();
+        }
         public async Task<AccountModel> Update(AccountModel account)
         {
             _context.Entry(account).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return account;
-            
         }
         public async Task<bool> DeleteByAccountId(int id)
         {
