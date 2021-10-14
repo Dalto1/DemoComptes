@@ -3,6 +3,7 @@ using Domain.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Domain.Interfaces;
+using Domain.Managers;
 
 namespace REST.Controllers
 {
@@ -12,29 +13,16 @@ namespace REST.Controllers
     {
         private readonly IAccountsRepository _AccountsRepository;
         private readonly ITransactionsRepository _TransactionsRepository;
-        public TransactionsController(IAccountsRepository accountsRepository, ITransactionsRepository transactionRepository)
+        public TransactionsController(IAccountsRepository accountsRepository, ITransactionsRepository transactionsRepository)
         {
             _AccountsRepository = accountsRepository;
-            _TransactionsRepository = transactionRepository;
+            _TransactionsRepository = transactionsRepository;
         }
 
         [HttpPost]
         public async Task<ActionResult<TransactionModel>> Create(TransactionModel transaction)
         {
-            TransactionModel result = null;
-            AccountModel fromAccount = await _AccountsRepository.FindByAccountId(transaction.TransactionOrigin);
-            AccountModel toAccount = await _AccountsRepository.FindByAccountId(transaction.TransactionDestination);
-            if (transaction.TransactionAmount < 0)
-            {
-                transaction.IsValid = false;
-            }
-            else
-            {
-                if (fromAccount != null) fromAccount.AccountBalance -= transaction.TransactionAmount;
-                if (toAccount != null) toAccount.AccountBalance += transaction.TransactionAmount;
-                result = await _TransactionsRepository.Create(transaction);
-            }
-
+            TransactionModel result = await TransactionsManager.Transfer(_AccountsRepository, _TransactionsRepository, transaction);
             if (result == null) return NoContent();
             return CreatedAtAction("TransactionFind", new { id = result.TransactionId }, result);
         }
