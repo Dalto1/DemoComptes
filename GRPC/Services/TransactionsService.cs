@@ -26,8 +26,7 @@ namespace GRPC
                 TransactionAmount = request.TransactionAmount,
                 TransactionDate = request.TransactionDate.ToDateTime(),
                 TransactionOrigin = request.TransactionOrigin,
-                TransactionDestination = request.TransactionDestination,
-                IsValid = request.IsValid
+                TransactionDestination = request.TransactionDestination
             };
             TransactionModel result = await new TransactionsManager(_AccountsRepository, _TransactionsRepository).Transfer(transaction);
             return new TransactionCreateResponse
@@ -36,8 +35,7 @@ namespace GRPC
                 TransactionAmount = result.TransactionAmount,
                 TransactionDate = Timestamp.FromDateTime(result.TransactionDate),
                 TransactionOrigin = result.TransactionOrigin,
-                TransactionDestination = result.TransactionDestination,
-                IsValid = result.IsValid
+                TransactionDestination = result.TransactionDestination
             };
         }
         public override async Task<TransactionGetAllReponse> TransactionGetAll(Empty request, ServerCallContext context)
@@ -52,8 +50,7 @@ namespace GRPC
                     TransactionAmount = trans.TransactionAmount,
                     TransactionDate = Timestamp.FromDateTime(trans.TransactionDate),
                     TransactionOrigin = trans.TransactionOrigin,
-                    TransactionDestination = trans.TransactionDestination,
-                    IsValid = trans.IsValid
+                    TransactionDestination = trans.TransactionDestination
                 };
                 response.Transaction.Add(item);
             }
@@ -78,8 +75,7 @@ namespace GRPC
                 TransactionAmount = result.TransactionAmount,
                 TransactionDate = Timestamp.FromDateTime(result.TransactionDate),
                 TransactionOrigin = result.TransactionOrigin,
-                TransactionDestination = result.TransactionDestination,
-                IsValid = result.IsValid
+                TransactionDestination = result.TransactionDestination
             };
         }
         public override async Task<TransactionUpdateResponse> TransactionUpdate(TransactionUpdateParams request, ServerCallContext context)
@@ -90,8 +86,7 @@ namespace GRPC
                 TransactionAmount = request.TransactionAmount,
                 TransactionDate = request.TransactionDate.ToDateTime(),
                 TransactionOrigin = request.TransactionOrigin,
-                TransactionDestination = request.TransactionDestination,
-                IsValid = request.IsValid
+                TransactionDestination = request.TransactionDestination
             };
             TransactionModel result = await _TransactionsRepository.Update(request.TransactionId, transaction);
             return new TransactionUpdateResponse
@@ -100,8 +95,7 @@ namespace GRPC
                 TransactionAmount = result.TransactionAmount,
                 TransactionDate = Timestamp.FromDateTime(result.TransactionDate),
                 TransactionOrigin = result.TransactionOrigin,
-                TransactionDestination = result.TransactionDestination,
-                IsValid = result.IsValid
+                TransactionDestination = result.TransactionDestination
             };
         }
         public override async Task<TransactionDeleteByTransactionIdResponse> TransactionDeleteByTransactionId(TransactionDeleteByTransactionIdParams request, ServerCallContext context)

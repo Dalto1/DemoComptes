@@ -15,8 +15,6 @@ namespace Domain.Models
         public int TransactionOrigin { get; set; }
         [Required]
         public int TransactionDestination { get; set; }
-        [Required]
-        public bool IsValid { get; set; }
         public TransactionModel()
         {
             TransactionDate = DateTime.Now;

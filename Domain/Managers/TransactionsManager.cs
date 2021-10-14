@@ -17,7 +17,6 @@ namespace Domain.Managers
         }
         public async Task<TransactionModel> Transfer(TransactionModel transaction)
         {
-            transaction.IsValid = false;
             if (transaction.TransactionAmount > 0)
             {
                 List<int> ids = new();
@@ -33,11 +32,11 @@ namespace Domain.Managers
                 {
                     accountOrigin.AccountBalance -= transaction.TransactionAmount;
                     accountDestination.AccountBalance += transaction.TransactionAmount;
-                    transaction.IsValid = true;
+                    await _TransactionsRepository.Create(transaction);
+                    return transaction;
                 }
             }
-            await _TransactionsRepository.Create(transaction);
-            return transaction;
+            return null;
         }
     }
 }
