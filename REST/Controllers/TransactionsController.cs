@@ -23,7 +23,6 @@ namespace REST.Controllers
         public async Task<ActionResult<TransactionModel>> Create(TransactionModel transaction)
         {
             TransactionModel result = await TransactionsManager.Transfer(_AccountsRepository, _TransactionsRepository, transaction);
-            if (result == null) return NoContent();
             return CreatedAtAction("TransactionFind", new { id = result.TransactionId }, result);
         }
         [HttpGet]

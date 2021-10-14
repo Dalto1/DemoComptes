@@ -4,6 +4,7 @@ using Domain.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Domain.Interfaces;
+using Domain.Managers;
 
 namespace GRPC
 {
@@ -28,26 +29,15 @@ namespace GRPC
                 TransactionDestination = request.TransactionDestination,
                 IsValid = request.IsValid
             };
-            AccountModel fromAccount = await _AccountsRepository.FindByAccountId(transaction.TransactionOrigin);
-            AccountModel toAccount = await _AccountsRepository.FindByAccountId(transaction.TransactionDestination);
-            if (transaction.TransactionAmount < 0)
-            {
-                transaction.IsValid = false;
-            }
-            else
-            {
-                if (fromAccount != null) fromAccount.AccountBalance -= transaction.TransactionAmount;
-                if (toAccount != null) toAccount.AccountBalance += transaction.TransactionAmount;
-                await _TransactionsRepository.Create(transaction);
-            }
+            TransactionModel result = await TransactionsManager.Transfer(_AccountsRepository, _TransactionsRepository, transaction);
             return new TransactionCreateResponse
             {
-                TransactionId = transaction.TransactionId,
-                TransactionAmount = transaction.TransactionAmount,
-                TransactionDate = Timestamp.FromDateTime(transaction.TransactionDate),
-                TransactionOrigin = transaction.TransactionOrigin,
-                TransactionDestination = transaction.TransactionDestination,
-                IsValid = transaction.IsValid
+                TransactionId = result.TransactionId,
+                TransactionAmount = result.TransactionAmount,
+                TransactionDate = Timestamp.FromDateTime(result.TransactionDate),
+                TransactionOrigin = result.TransactionOrigin,
+                TransactionDestination = result.TransactionDestination,
+                IsValid = result.IsValid
             };
         }
         public override async Task<TransactionGetAllReponse> TransactionGetAll(Empty request, ServerCallContext context)
