@@ -28,6 +28,7 @@ namespace Domain.Managers
                 AccountModel accountDestination = accounts.Find(x => x.AccountId == transaction.TransactionDestination);
                 if (accountOrigin != null &&
                     accountDestination != null &&
+                    accountOrigin != accountDestination &&
                     accountOrigin.AccountBalance >= transaction.TransactionAmount)
                 {
                     accountOrigin.AccountBalance -= transaction.TransactionAmount;
