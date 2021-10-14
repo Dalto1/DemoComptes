@@ -29,7 +29,7 @@ namespace GRPC
                 TransactionDestination = request.TransactionDestination,
                 IsValid = request.IsValid
             };
-            TransactionModel result = await TransactionsManager.Transfer(_AccountsRepository, _TransactionsRepository, transaction);
+            TransactionModel result = await new TransactionsManager(_AccountsRepository, _TransactionsRepository).Transfer(transaction);
             return new TransactionCreateResponse
             {
                 TransactionId = result.TransactionId,
