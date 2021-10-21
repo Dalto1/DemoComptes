@@ -29,6 +29,10 @@ namespace GRPC
                 TransactionDestination = request.TransactionDestination
             };
             TransactionModel result = await new TransactionsManager(_AccountsRepository, _TransactionsRepository).Transfer(transaction);
+            if (result == null)
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, "Comptes entrés invalides"));
+            }
             return new TransactionCreateResponse
             {
                 TransactionId = result.TransactionId,
